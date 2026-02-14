@@ -61,21 +61,17 @@
 
       The default keybind for opening a file manager is `SUPER+E`.
 
-   4. Install a _clipboard_. We'll install **cursor-clip** - it features the clipboard history overlay window.
+   4. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
 
-      Then install the clipboard tool:
+      >`yay -S clipse`
 
-      > `yay -S cursor-clip-git`
+      Add this to Hyprland's config:
 
-      If prompted to choose a provider for **cargo** (Rust's build tool), choose `rust`. If prompted with "Packages to cleanBuild?", choose `None` since we are installing the tool for the first time and nothing would conflict. "Diffs to show?" - `None`, thank you. And finally do not remove make dependencies after install, they may come in handy when next installing something.
+      >`exec-once = clipse -listen`
 
-      Then open up the config file and paste this under _AUTOSTART_:
+      >`bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
 
-      > `exec-once = cursor-clip --daemon`
-
-      And this in _KEYBINDINGS_ - this keybind opens up the history overlay:
-
-      > `bind = SUPER, V, exec, cursor-clip`
+      >`windowrule = match:class ^app\.clipse$, float on, size 622 652`
 
       Also, install `wl-clipboard` just to make the guide shut up and it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 

@@ -1,0 +1,47 @@
+/* /etc/greetd/regreet.css */
+
+/* cherry-dark-ish */
+@define-color fg #f2f2f2;
+@define-color muted #b8b6bb;
+@define-color accent #d24b5b;
+
+/* keep the overall window transparent so the background shows */
+window {
+  background: transparent;
+}
+
+* {
+  font-family: "JetBrains Mono Nerd Font Mono";
+  font-size: 14px;
+  color: @fg;
+}
+
+/* main input field */
+entry {
+  min-height: 64px;
+  padding-left: 18px;
+  padding-right: 18px;
+
+  border-radius: 22px;
+  border: 2px solid rgba(210, 75, 91, 0.35);
+
+  background-color: rgba(11, 15, 20, 0.60); /* like your hyprlock inner_color vibe */
+  color: @fg;
+
+  box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+}
+
+entry:focus {
+  border-color: rgba(210, 75, 91, 0.65);
+}
+
+label {
+  color: @muted;
+}
+
+/* try to make the clock faint and big (best-effort; widget selectors can vary) */
+#clock, .clock, label.clock {
+  font-size: 120px;
+  font-weight: 800;
+  color: rgba(242,242,242,0.18);
+}

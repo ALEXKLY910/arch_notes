@@ -1,0 +1,8 @@
+[SddmGreeterTheme]
+Name=Cherry Bloom
+Description=Ghost clock and pills.
+Type=sddm-theme
+MainScript=Main.qml
+Theme-Id=cherry-bloom
+Theme-API=2.0
+QtVersion=6

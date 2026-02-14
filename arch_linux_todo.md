@@ -1,14 +1,30 @@
 _Consider configuring uwsm._
 
+```
+Do now:
+
+
+```
+
+Did rn, not documented:
+```
+
+```
+
+configure notifications
+
+For themes you can consider using SUPER+Shift+T keybind 
+
 Consider configuring file manager. Reference: https://wiki.archlinux.org/title/File_manager_functionality
 
-Configure Waybar (https://wiki.hypr.land/Useful-Utilities/Status-Bars/).
+Make save \ load file dialogues open in floating mode.
 
-Configure greeter (https://wiki.archlinux.org/title/Greetd/)
+Blue light filter.
+
+Configure Waybar (https://wiki.hypr.land/Useful-Utilities/Status-Bars/). Add the current keyboard layout to display there. 
 
 Configure Ghostty.
 
-Invert touchpad scroll. Change scroll sensitivity.
 
 Screenshots.
 
@@ -30,7 +46,5 @@ VLC media player
 Zapret script
 Happ VPN
 APO Equalizer
-
-Trash bin
 
 Archivator

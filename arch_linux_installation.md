@@ -579,6 +579,13 @@
 
     > `yay -S google-chrome`
 
+    And configure some gestures for Google Chrome (left-right swipes for history navigation in my case):
+    Create Chrome's flagfile:
+      >`nano ~/.config/chrome-flags.conf`
+
+      Paste this:
+      >`--enable-features=TouchpadOverscrollHistoryNavigation`
+
 15. Install a simple text editor. For example, **Featherpad**:
 
     > `sudo pacman -S featherpad`
@@ -596,3 +603,122 @@
     > `pacman -Rns happ`
 
     The default configuration may break DNS resolving so in _Advanced settings_ and choose _TUN mode_ to be **gVisor**.
+17. Make the touchpad scroll natural and change its sensitivity by adding to input{} the following:
+   ```
+   touchpad {
+      natural_scroll = true
+      scroll_factor = 0.2
+   }
+   ```
+18. Configure a prettier greeting screen. Earlier we used **Tuigreet**. Now we want graphics and wallpapers and blur, so we'll use fully customizable **SDDM**. Also, we need to ditch **greetd** login daemon for that.
+
+      1. Install **SDDM** and the **Qt** packages it needs:
+
+         >`sudo pacman -S sddm qt6-base qt6-declarative qt6-wayland qt6-5compat`
+      
+      2. If the **greetd** is still running, disable it:
+
+         >`sudo systemctl disable --now greetd.service`
+
+         You'll get kicked out of the Hyprland. Reboot and log in in the TTY. Then run `start-hyprland` to get back in.
+
+      3. Download fonts for styling:
+         >`sudo pacman -S ttf-jetbrains-mono-nerd`
+
+         And update _fontconfig_'s cache so that it recognizes the new font:
+
+         >`sudo fc-cache -r`
+
+      4. Create a directory under `/usr/share/sddm/themes/` and call it the name of the theme. For example, `cherry-bloom`. And move your wallpaper there.
+
+         >`sudo mkdir /usr/share/sddm/themes/cherry-bloom`
+         >`sudo cp ~/Images/cherry_bloom_wallpaper_blur.jpg /usr/share/sddm/themes/cherry-bloom`
+
+         Now, create three files in the `/usr/share/sddm/themes/cherry-bloom`:
+         
+            - `metadata.desktop` - the entry point. The greeter reads it and gets informed that this directory is a theme and also what QML to load.
+            - `Main.qml` - the actual QML layout of the greeter screen.
+
+          Reference their contents in `SMMD` directory of the guide.
+
+      5. Create an SDDM config file that SDDM looks up when started and put there the theme directory name and the default session (Hyprland in our case, of course):
+
+         >`sudo nano /etc/sddm.conf`
+
+         ```
+         [Theme]
+         Current=cherry-bloom
+
+         [General]
+         Session=hyprland.desktop
+         GreeterEnvironment=QT_SCALE_FACTOR=1.5
+
+         ```
+      
+      6. Test the theme. Run this to preview:
+
+         > `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/cherry-bloom`
+
+      7. Make the system boot into the greeter:
+         
+         >`sudo systemctl enable sddm.service`
+      
+
+      8. Uninstall **tuigreet** and **greetd**:
+
+         >`sudo pacman -Rns greetd greetd-tuigreet`
+
+
+19. Add Russian keyboard layout inside Hyprland. Edit the Hyprland's config file by including to input{} the following:
+
+   ```
+   input {
+      kb_layout = us,ru
+      kb_options = grp:alt_shift_toggle
+   }
+   ```
+20. Remap _caps lock_ from clicking `Caps` to clicking `Caps+SHIFT` and add the following keybind:
+   >`Caps+Left` is the same as `Home`
+   >`Caps+Right` is the same as `End`
+
+   For that, install `keyd`:
+
+      >`sudo pacman -S keyd`
+   
+   Enable the daemon:
+
+      >`sudo systemctl enable --now keyd`
+
+    And edit `/etc/keyd/default.conf`:
+      ```
+      # /etc/keyd/default.conf
+
+      [ids]
+      *
+
+      [main]
+      # Turn the Caps Lock key into a momentary layer modifier.
+      capslock = layer(caps)
+
+      [caps]
+      # While holding Caps, arrows become navigation keys
+      left  = home
+      right = end
+
+      [caps+control]
+      left  = C-home
+      right = C-end
+      ```
+21. Install **fastfetch** to check your system's specs and blatantly show off:
+   >`sudo pacman -S fastfetch`
+
+   Then simply run by typing `fastfetch` in the Terminal
+
+22. Configure autocomplete in bash to always suggest options if you click Tab (and not only when there are matches). Edit `~/.inputrc`:
+   ```
+   TAB: old-menu-complete
+
+   set menu-complete-display-prefix on
+
+   set mark-directories off
+   ```

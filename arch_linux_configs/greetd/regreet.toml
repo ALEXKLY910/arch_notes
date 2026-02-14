@@ -1,0 +1,24 @@
+# /etc/greetd/regreet.toml
+
+[background]
+path = "/usr/share/backgrounds/cherry_bloom_wallpaper.jpg"
+fit = "Cover"  # note: only works if ReGreet was built with GTK 4.8+ support
+
+[GTK]
+application_prefer_dark_theme = true
+font_name = "JetBrains Mono Nerd Font Mono 14"
+cursor_theme_name = "Adwaita"
+icon_theme_name = "Papirus-Dark"
+theme_name = "Adwaita-dark"
+
+[appearance]
+greeting_msg = ""
+
+[widget.clock]
+format = "%H:%M"
+resolution = "500ms"
+label_width = 150
+
+[commands]
+reboot = ["systemctl", "reboot"]
+poweroff = ["systemctl", "poweroff"]
