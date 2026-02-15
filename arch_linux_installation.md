@@ -722,3 +722,44 @@
 
    set mark-directories off
    ```
+23. Reference `arch_linux_theme_toggle.md` for writing your own theme toggle.
+
+24. Let's configure the file picker menu to open in the floating mode. First, identify what that window is called. For it, you'll need to open the window, focus it and run a command.
+   To run a command and keep the window open, add this temporary shortcut to hyprland's config:
+
+      >`bind = $mainMod SHIFT, P, exec, sh -c 'hyprctl activewindow | wl-copy'`
+
+   Then reload so hyprland knows of this shortcut.
+
+      >`hyprctl reload` 
+
+   Run the command and look for the `class` field. In my case, it was `org.freedesktop.impl.portal.desktop.kde`.
+
+   Now, in hyprland's config, add this windowrule:
+   ```
+   windowrule = match:class ^org\.freedesktop\.impl\.portal\.desktop\.kde$, float on, size (monitor_w*0.60) (monitor_h*0.70), focus_on_activate on, dim_around on
+   ```
+
+   Reload again.
+
+   You can then delete the shortcut. 
+
+25. Add lowblue mode. Install **Hypersunset**:
+
+      >`sudo pacman -S hyprsunset`
+
+   In hyprland's config add this to autostart it:
+
+      >`exec-once = hyprsunset`
+
+   Now add the keybinds:
+   ```
+   # Enable low-blue (set your preferred temperature)
+   bind = SUPER, N, exec, hyprctl hyprsunset temperature 5000
+
+   # Disable low-blue (back to normal colors)
+   bind = SUPER SHIFT, N, exec, hyprctl hyprsunset identity
+   ```
+
+   Reboot so that it all works.
+

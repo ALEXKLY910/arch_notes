@@ -131,7 +131,7 @@ Item {
     Text {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: passwordBox.top
-        anchors.bottomMargin: 30
+        anchors.bottomMargin: 18
 
         font.pixelSize: 12
         font.family: root.fontFamily

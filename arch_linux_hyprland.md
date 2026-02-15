@@ -9,7 +9,7 @@
 
 2. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** _portal backend_ so apps get a usable file picker and other dialogs:
 
-   > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-kde`
+   > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-kde xdg-desktop-portal-gtk`
 
    If prompted which _qt6 multimedia to pick_, choose `qt6-multimedia-ffmpeg`.
 
@@ -17,7 +17,8 @@
 
    ```
    [preferred]
-   default=hyprland;kde
+   default=hyprland;gtk
+   org.freedesktop.impl.portal.FileChooser=kde
    ```
 
 3. Install the **Kitty** terminal emulator:

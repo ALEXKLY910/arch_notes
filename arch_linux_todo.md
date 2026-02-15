@@ -1,21 +1,24 @@
 _Consider configuring uwsm._
 
-```
-Do now:
-
-
-```
-
-Did rn, not documented:
-```
-
-```
-
-configure notifications
-
-For themes you can consider using SUPER+Shift+T keybind 
+Configure notifications
 
 Consider configuring file manager. Reference: https://wiki.archlinux.org/title/File_manager_functionality
+
+THE PLAN:
+```
+Figure out why file picker and featherpad is in dark mode by default.
+
+After reboot check out lowblue mode
+
+```
+DID:
+```
+~/.local/bin/kill-kde
+bind = $mainMod SHIFT, P, exec, ~/.local/bin/kill-kde
+
+
+
+
 
 Make save \ load file dialogues open in floating mode.
 
@@ -30,8 +33,6 @@ Screenshots.
 
 Text extractor.
 
-Light and dark SYSTEM themes.
-
 Discord
 Steam
 Libre Office
@@ -40,11 +41,12 @@ Image viewing
 Notes
 Firefox, Chrome
 NeoVim
-VS code
 VLC media player
 
 Zapret script
-Happ VPN
+
 APO Equalizer
 
 Archivator
+
+Some analogue for yandex disk for syncing files across machines
