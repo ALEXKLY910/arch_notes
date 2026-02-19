@@ -99,24 +99,9 @@
 
    > `sudo pacman -S hyprlock hypridle`
 
-   Configure **Hyprlock**. It's configuration file is located at `~/.config/hypr/hyprlock.conf`. Paste something like this for starters:
+   Configure **Hyprlock**. It's configuration file is located at `~/.config/hypr/hyprlock.conf`. Paste the contents of `arch-notes/arch_linux_configs/hyprlock.conf` there.
 
-   ```
-   background {
-    monitor =
-    color = rgba(0, 0, 0, 0.7)
-   }
-
-   input-field {
-      monitor =
-      size = 250, 50
-      position = 0, 0
-      halign = center
-      valign = center
-   }
-   ```
-
-   Configure **Hypridle**. It's configuration file is located at `~/.config/hypr/hypridle.conf`. Reference `arch_linux_configs/hypridle_default_config.conf`
+   Configure **Hypridle**. It's configuration file is located at `~/.config/hypr/hypridle.conf`. Paste the contents of `arch-notes/arch_linux_configs/hypridle.conf`.
 
    Then open up the config file for Hyprland and paste under _AUTOSTART_:
 

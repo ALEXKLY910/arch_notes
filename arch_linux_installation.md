@@ -631,60 +631,64 @@
 
     > `sudo pacman -S kitty`
 
-38. Install a _file manager_. We'll install a GUI, light-weight **Thunar**:
+38. Install the **Ghostty** terminal emulator:
+
+    > `sudo pacman -S ghostty`
+
+39. Install a _file manager_. We'll install a GUI, light-weight **Thunar**:
 
     > `sudo pacman -S thunar`
 
-39. Install an _app launcher_. We'll install **Hyprlauncher**:
+40. Install an _app launcher_. We'll install **Hyprlauncher**:
 
     > `sudo pacman -S hyprlauncher`
 
-40. Download this guide to your machine in order to reference config files listed here:
+41. Download this guide to your machine in order to reference config files listed here:
 
     > `git clone https://github.com/ALEXKLY910/arch_notes.git Documents/arch-notes`
 
-41. Launch Hyprland to auto-creates its config.
+42. Launch Hyprland to auto-creates its config.
 
     > `start-hyprland`
 
-    Edit the config file at `~/.config/hypr/hyprland.conf` by leaving only the following:
+    Edit the config file at `~/.config/hypr/hyprland.conf` changing its contents to the contents of `arch-notes/arch_linux_configs/hyprland-first.conf`.
+    Also, create `~/.config/hypr/themes/cherry-dark.conf` and paste the contents of `arch-notes/arch_linux_configs/themes/cherry-dark.conf`
 
-    ```
-
-
-    ```
-
-42. _Authentication agent_ (the thing that pops up a window asking you for a password whenever an app wants to elevate its privileges). We'll use **hyprpolkitagent**.
+43. _Authentication agent_ (the thing that pops up a window asking you for a password whenever an app wants to elevate its privileges). We'll use **hyprpolkitagent**.
 
     > `sudo pacman -S hyprpolkitagent`
 
     Then open up **Hyprland** config file. Under _AUTOSTART_ section, add the following line:
 
+    > `# authentication agent`
     > `exec-once = systemctl --user start hyprpolkitagent`
 
-43. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **mako** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
+44. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **mako** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
 
     > `sudo pacman -S mako`
 
     We don't have to wire this up manually in the config because it will be activated automatically when needed (via _D-Bus_).
 
-44. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
+45. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
 
     > `yay -S clipse`
 
-    Add this to Hyprland's config:
+    Add this to Hyprland's config under _AUTOSTART_:
 
+    > `# clipboard`
     > `exec-once = clipse -listen`
 
-    > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
+    And under _KEYBINDINGS_:
 
+    > `# clipboard`
+    > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
     > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
 
-    Also, install `wl-clipboard` just to make the guide shut up and it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
+    Also, install `wl-clipboard`, it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 
     > `sudo pacman -S wl-clipboard`
 
-45. Install a _status bar / shell_. We'll install the most popular one - **Waybar**.
+46. Install a _status bar / shell_. We'll install the most popular one - **Waybar**.
 
     > `sudo pacman -S waybar`
 
@@ -694,7 +698,7 @@
 
     > `exec-once = waybar`
 
-46. Install a _wallpaper_ daemon. We'll install **Hyprpaper**:
+47. Install a _wallpaper_ daemon. We'll install **Hyprpaper**:
 
     > `sudo pacman -S hyprpaper`
 
@@ -702,7 +706,11 @@
 
     > `exec-once = hyprpaper`
 
-47. Edit the `~/.config/hypr/hyprland.conf` by adding the following section so that X11 apps don't render pixelated:
+    Copy a wallpaper from the guide to `~/.config/hypr/wallpapers/`
+
+    Create a config file at `~/.config/hypr/hyprpaper.conf` and paste the contents of `arch-notes/arch_linux_configs/hyprpaper.conf`.
+
+48. Edit the `~/.config/hypr/hyprland.conf` by adding the following section so that X11 apps don't render pixelated:
 
     ```
     xwayland {
@@ -711,7 +719,25 @@
     }
     ```
 
-48. Let's add **udisks2** - a disk-managing daemon that **Thunar** can ask to mount your devices. Basically that means that whenever you plug in, say, a USB, it would mount automatically.
+49. Install **Hyprlock** and **Hypridle** so that you'll have the lock screen and can auto-sleep, auto-turn-screen-off, etc.
+
+    > `sudo pacman -S hyprlock hypridle`
+
+    Copy a blurred wallpaper from the guide to `~/.config/hypr/wallpapers/`
+
+    Configure **Hyprlock**. It's configuration file is located at `~/.config/hypr/hyprlock.conf`. Paste the contents of `arch-notes/arch_linux_configs/hyprlock.conf` there.
+
+    Configure **Hypridle**. It's configuration file is located at `~/.config/hypr/hypridle.conf`. Paste the contents of `arch-notes/arch_linux_configs/hypridle.conf`.
+
+    Then open up the config file for Hyprland and paste under _AUTOSTART_:
+
+    > `exec-once = hypridle`
+
+    And add a manual lock keybind under _KEYBINDINGS_:
+
+    > `bind = SUPER, L, exec, loginctl lock-session`
+
+50. Let's add **udisks2** - a disk-managing daemon that **Thunar** can ask to mount your devices. Basically that means that whenever you plug in, say, a USB, it would mount automatically.
 
     > `sudo pacman -S udisks2`
 
@@ -731,7 +757,7 @@
 
     > `exec-once = thunar --daemon`
 
-49. Configure power management on laptop.
+51. Configure power management on laptop.
     Install **TLP** - a power management tool. The default configuration is good enough so we'll not tweak it.
 
     > `sudo pacman -S tlp`
@@ -759,11 +785,11 @@
 
     Reboot to apply the changes.
 
-50. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
+52. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
 
     > `sudo pacman -S brightnessctl`
 
-51. Let's configure Bluetooth.
+53. Let's configure Bluetooth.
     1. First, install the Bluetooth stack and CLI tools:
 
        > `sudo pacman -S bluez bluez-utils`
@@ -778,7 +804,7 @@
 
     And to run it, in the **App launcher** type "Bluetooth manager"
 
-52. Disable mouse acceleration. Edit Hyprland's config file by editing this section:
+54. Disable mouse acceleration. Edit Hyprland's config file by editing this section:
 
     ```
     input{
@@ -786,7 +812,7 @@
     }
     ```
 
-53. Install **Firefox** and **Google Chrome**:
+55. Install **Firefox** and **Google Chrome**:
 
     > `sudo pacman -S firefox`
 
@@ -794,11 +820,11 @@
 
     > `yay -S google-chrome`
 
-54. Install a simple text editor. For example, **Featherpad**:
+56. Install a simple text editor. For example, **Featherpad**:
 
     > `sudo pacman -S featherpad`
 
-55. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
+57. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
 
     > `https://github.com/Happ-proxy/happ-desktop/releases`
 
