@@ -94,7 +94,7 @@
 
       Add a keybind in _KEYBINDINGS_ in the config file:
 
-      > `bind = SUPER, SPACE, exec, hyprlauncher`
+      > `bind = SUPER, R, exec, hyprlauncher`
 
    7. Install a _wallpaper_ daemon. We'll install **Hyprpaper**:
 

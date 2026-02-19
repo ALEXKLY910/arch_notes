@@ -1,4 +1,4 @@
-If in order to connect to Wi-Fi you need to be redirected to a login page in browser, first connect to Wi-Fi and then just go to this link and redirect should occur: `http://neverssl.com/`
+`If in order to connect to Wi-Fi you need to be redirected to a login page in browser, first connect to Wi-Fi and then just go to this link and redirect should occur: `http://neverssl.com/`
 
 If something returns `sudo: unable to resolve host <hostname>`, edit `/etc/hosts/`: add this line `127.0.1.1 yourhostname.localdomain yourhostname`
 

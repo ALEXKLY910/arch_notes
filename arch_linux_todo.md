@@ -16,6 +16,10 @@ DID:
 ~/.local/bin/kill-kde
 bind = $mainMod SHIFT, P, exec, ~/.local/bin/kill-kde
 
+sudo pacman -Rns code
+
+```
+
 
 
 
