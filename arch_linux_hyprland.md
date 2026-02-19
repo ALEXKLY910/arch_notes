@@ -1,12 +1,3 @@
-1. For packages that are not in the official package list we'll have to use **yay** to install them easier. So you'll need to install **yay**:
-
-   > `sudo pacman -S --needed git base-devel`
-   > `git clone https://aur.archlinux.org/yay.git`
-   > `cd yay`
-   > `makepkg -si`
-
-   You may remove the `yay` directory that was created in the process.
-
 2. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** _portal backend_ so apps get a usable file picker and other dialogs:
 
    > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-kde xdg-desktop-portal-gtk`
@@ -64,15 +55,15 @@
 
    4. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
 
-      >`yay -S clipse`
+      > `yay -S clipse`
 
       Add this to Hyprland's config:
 
-      >`exec-once = clipse -listen`
+      > `exec-once = clipse -listen`
 
-      >`bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
+      > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
 
-      >`windowrule = match:class ^app\.clipse$, float on, size 622 652`
+      > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
 
       Also, install `wl-clipboard` just to make the guide shut up and it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 

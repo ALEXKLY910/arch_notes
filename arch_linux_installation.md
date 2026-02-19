@@ -1,10 +1,6 @@
 [Official download page]: https://archlinux.org/download/
 
-# Chapter 1. Arch Linux installation process, documented.
-
-### This assumes UEFI, no dual-boot, single drive, single ext4 root + EFI partition, no swap partition, 64-bit only.
-
-<!-- In order to view the preview of this Markdown in VS Code, hit Ctrl+Shift+V -->
+# Arch Linux installation process, UEFI, no dual-boot, single drive, ext4 root + EFI partition + no swap, 64-bit only, Hyprland. Plus theming and common sowftare. Documented.
 
 1.  Go to [Official download page][Official download page], download **.torrent** file for the ISO. And the signature file ending with **.iso.sig**. Open up the **.torrent** file, for example, with **μTorrent**, download the ISO.
 
@@ -269,7 +265,7 @@
 
     You can verify that it was executed properly by checking the contents of the file:
 
-    > `nano /mnt/etc/fstab`
+    > `cat /mnt/etc/fstab`
 
 14. To directly interact with the new system's environment, tools, and configurations for the next steps as if you were booted into it, change root into the new system:
 
@@ -325,11 +321,9 @@
 
 21. Exit the _chroot jail_ by typing `exit` or pressing `Crtl+d`. Then type `reboot` to reboot the machine. Remove the USB stick when it's restarting and not doing anything in the shell anymore.
 
-## That should be it. Log in as `root`, enter the password you set before and proceed to further set up you environment. You're inside Arch Linux now, yay!
+### That should be it. Log in as `root`, enter the password you set before and proceed to further set up you environment. You're inside Arch Linux now, yay!
 
-# Chapter 2. Post-installation process, documented
-
-1.  If you want your USB to be back in a working state, you should reformat it. The procedure is pretty much the same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
+22. If you want your USB to be back in a working state, you should reformat it. The procedure is pretty much the same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
     1. Launch **diskpart** shell, by running:
        > `diskpart`
     2. Lists all the disks:
@@ -364,7 +358,7 @@
 
        > `exit`
 
-2.  Connect to the internet. You can now use a tool provided by the **NetworkManager** called **nmtui**:
+23. Connect to the internet. You can now use a tool provided by the **NetworkManager** called **nmtui**:
     1. Run:
        > `nmtui`
     2. Choose **"Activate a connection"**, pick your Wi-Fi, enter you password. Exit the tool.
@@ -373,7 +367,7 @@
 
     _P.S. for further network management use this tool_
 
-3.  Right now all you're seeing is TTY. But it has an awfully small font. Let's set another one. Actually, the one we used during the Arch installation.
+24. Right now all you're seeing is TTY. But it has an awfully small font. Let's set another one. Actually, the one we used during the Arch installation.
     1. You have to download the font package because it doesn't come preinstalled like it was on the _live system_:
        > `pacman -S terminus-font`
     2. Now you can set the font. Note that this will set the font only for the current session:
@@ -386,7 +380,7 @@
 
        > `FONT=ter-132b`
 
-4.  Let's add a user, because always being root is extremely unsafe. I'll add a new user, call him `alex`. I'll add him to the `wheel` group - a group of users that conventionally gets granted the access to `sudo` - a tool that lets a user run commands with root priviliges.
+25. Let's add a user, because always being root is extremely unsafe. I'll add a new user, call him `alex`. I'll add him to the `wheel` group - a group of users that conventionally gets granted the access to `sudo` - a tool that lets a user run commands with root priviliges.
     1. First lets create the user and add him to the group. Also, it's worth setting the `login shell` that will be used for this user later, I'll stick with `bash`. `-m` flag creates a `/home/username` directory:
 
        > `useradd -m -G wheel -s /bin/bash alex`
@@ -398,7 +392,7 @@
     3. We can double-check that the user has been added by running:
        > `id alex`
 
-5.  Once we added the user and added him to the `wheel` group, let's install `sudo` and grant `sudo` access to the `wheel` group:
+26. Once we added the user and added him to the `wheel` group, let's install `sudo` and grant `sudo` access to the `wheel` group:
     1. Install `sudo`:
 
        > `pacman -S sudo`
@@ -422,11 +416,124 @@
 
 ### Now we created a user. We won't be logging in as `root` anymore for now. So, run `reboot` and log in as the user. And keep logging in as the user in the future.
 
-## The next step would be installing drivers. Reference `arch_linux_drivers.md`.
+## The next step would be installing drivers.
 
-## The next step would be installing and configuring **Hyprland**. Reference `arch_linux_hyprland.md`
+27. Enable `multilib` repository so that you can install 32 bit software using `pacman`:
+    - open up `pacman`'s configuration file:
 
-6.  Enable **TRIM** if you have SSD or NVMe. It's a technology that helps free space more efficiently (discard unused filesystem blocks once a week):
+      > `sudo nano /etc/pacman.conf`
+
+    - uncomment the `[multilib]` section. Save the changes and close the file:
+
+      > [multilib]  
+      > Include = /etc/pacman.d/mirrorlist
+
+    - update the package databases to enable the changes. The following command will also update the installed packages to be up-to-date:
+
+      > `sudo pacman -Syu`
+
+## Mesa, Vulkan and VA-API are for Intel GPUs
+
+28. Install **Mesa** _userspace driver stack_. Without it the system would render graphics using CPU which is ineffective in all the possible ways.
+    1. Install `mesa`, `lib32-mesa` and `mesa-utils` packages. The `lib32-mesa` is required for 32 bit applications to use **Mesa**. The `mesa-utils` will be needed for checking that the drivers are working:
+
+       > `sudo pacman -S mesa lib32-mesa mesa-utils`
+
+    2. To verify the installation, run:
+
+       > `eglinfo -B > eglinfo.txt`
+
+       Open up the file and look for something like this:
+
+       > OpenGL core profile vendor: **Intel**  
+       > OpenGL core profile renderer: **Mesa Intel(R) HD Graphics 620 (KBL GT2)**
+
+       That is, the core profile renderer is your GPU, and not something like `llvmpipe` - the default CPU renderer.
+
+       Note though, that it will list `llvmpipe` as the fallback renderer somewhere. It would probably be listed under the last device.
+
+29. Install **Vulkan** _userspace driver stack_. Without it apps that need Vulkan won't work at all.
+    1. Install the packages:
+
+       > `sudo pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader lib32-vulkan-intel vulkan-tools`
+
+    2. To verify that **Vulkan** support is up, run:
+
+       > `vulkaninfo > vulkaninfo.txt`
+
+       Open up the file and look for info about your graphics card. Look for `GPU0` and check out the `deviceName`. It should be the name of your actual GPU.
+
+30. Configure video acceleration. I'll use **VA-API**.
+    1. For even vaguely modern systems, install `intel-media-driver`. Also install `libva-utils` for checking that it works:
+
+       > `sudo pacman -S intel-media-driver libva-utils`
+
+    2. To verify that it works, run:
+
+       > `vainfo > vainfo.txt`
+
+       If it prints stuff like this, you're good. If it prints some kind of error, there are issues:
+
+       ```
+       Trying display: wayland
+
+       Trying display: x11
+       Trying display: drm
+       vainfo: VA-API version: 1.22 (libva 2.22.0)
+       vainfo: Driver version: Intel iHD driver for Intel(R) Gen Graphics - 25.3.4 ()
+       vainfo: Supported profile and entrypoints
+       VAProfileNone : VAEntrypointVideoProc
+       VAProfileNone : VAEntrypointStats
+       VAProfileMPEG2Simple : VAEntrypointVLD
+       VAProfileMPEG2Simple : VAEntrypointEncSlice
+       VAProfileMPEG2Main : VAEntrypointVLD
+       VAProfileMPEG2Main : VAEntrypointEncSlice
+       VAProfileH264Main : VAEntrypointVLD
+       VAProfileH264Main : VAEntrypointEncSlice
+       VAProfileH264Main : VAEntrypointFEI
+       VAProfileH264Main : VAEntrypointEncSliceLP
+       VAProfileH264High : VAEntrypointVLD
+       VAProfileH264High : VAEntrypointEncSlice
+       VAProfileH264High : VAEntrypointFEI
+       VAProfileH264High : VAEntrypointEncSliceLP
+       VAProfileVC1Simple : VAEntrypointVLD
+       VAProfileVC1Main : VAEntrypointVLD
+       VAProfileVC1Advanced : VAEntrypointVLD
+       VAProfileJPEGBaseline : VAEntrypointVLD
+       VAProfileJPEGBaseline : VAEntrypointEncPicture
+       VAProfileH264ConstrainedBaseline: VAEntrypointVLD
+       VAProfileH264ConstrainedBaseline: VAEntrypointEncSlice
+       VAProfileH264ConstrainedBaseline: VAEntrypointFEI
+       VAProfileH264ConstrainedBaseline: VAEntrypointEncSliceLP
+       VAProfileVP8Version0_3 : VAEntrypointVLD
+       VAProfileVP8Version0_3 : VAEntrypointEncSlice
+       VAProfileHEVCMain : VAEntrypointVLD
+       VAProfileHEVCMain : VAEntrypointEncSlice
+       VAProfileHEVCMain : VAEntrypointFEI
+       VAProfileHEVCMain10 : VAEntrypointVLD
+       VAProfileHEVCMain10 : VAEntrypointEncSlice
+       VAProfileVP9Profile0 : VAEntrypointVLD
+       VAProfileVP9Profile2 : VAEntrypointVLD
+       ```
+
+31. Sound drivers. We'll install the default **PipeWire** stack.
+    1. Run this to install:
+
+       > `sudo pacman -S pipewire wireplumber pipewire-pulse pipewire-alsa`
+
+    2. Run this to enable the drivers on every boot and also right now for this user session (it's meant to run in user sessions):
+
+       > `systemctl --user enable --now pipewire.socket pipewire-pulse.socket wireplumber.service`
+
+       If you have multiple users at once and want to enable this for all of them at the same time, change `--user` flag to `--global`.
+
+    3. To check that the apps are now talking to **Pulse Audio**, run:
+
+       > `pactl info`
+
+       And look for the entry `Server Name: PulseAudio (on Pipewire ...)`
+
+32. Enable **TRIM** if you have SSD or NVMe. It's a technology that helps free space more efficiently (discard unused filesystem blocks once a week):
 
     > `sudo systemctl enable --now fstrim.timer`
 
@@ -438,7 +545,7 @@
 
     > `sudo fstrim -av`
 
-7.  Set up a _firewall_. We'll configure **ufw**:
+33. Set up a _firewall_. We'll configure **ufw**:
 
     > `sudo pacman -S ufw`
 
@@ -451,7 +558,7 @@
     > `sudo ufw default deny incoming`
     > `sudo ufw default allow outgoing`
 
-    Allow SSH connections if needed:
+    _Allow SSH connections if needed:_
 
     > `sudo ufw allow 22/tcp`
 
@@ -476,7 +583,7 @@
 
     > `sudo ufw status verbose`
 
-8.  Let's configure a RAM swap. Without it if you exceed your RAM capacity the kernel will start killing processes which could result in unsaved work and disrupted workflow. We'll use **zram**:
+34. Let's configure a RAM swap. Without it if you exceed your RAM capacity the kernel will start killing processes which could result in unsaved work and disrupted workflow. We'll use **zram**:
 
     > `sudo pacman -S zram-generator`
 
@@ -496,7 +603,115 @@
 
     > `swapon --show`
 
-9.  Let's add **udisks2** - a disk-managing daemon that **Thunar** can ask to mount your devices. Basically that means that whenever you plug in, say, a USB, it would mount automatically.
+35. For packages that are not in the official package list we'll have to use **yay** to install them easier. So you'll need to install **yay**:
+
+    > `sudo pacman -S --needed git base-devel`
+    > `git clone https://aur.archlinux.org/yay.git`
+    > `cd yay`
+    > `makepkg -si`
+
+    You may remove the `yay` directory that was created in the process.
+
+## The next step would be installing and configuring **Hyprland**.
+
+36. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** _portal backend_ so apps get a usable file picker and other dialogs:
+
+    > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk`
+
+    If prompted which _qt6 multimedia to pick_, choose `qt6-multimedia-ffmpeg`.
+
+    Write to this config file `~/.config/xdg-desktop-portal/hyprland-portals.conf` the following:
+
+    ```
+    [preferred]
+    default=hyprland;gtk
+    ```
+
+37. Install the **Kitty** terminal emulator:
+
+    > `sudo pacman -S kitty`
+
+38. Install a _file manager_. We'll install a GUI, light-weight **Thunar**:
+
+    > `sudo pacman -S thunar`
+
+39. Install an _app launcher_. We'll install **Hyprlauncher**:
+
+    > `sudo pacman -S hyprlauncher`
+
+40. Download this guide to your machine in order to reference config files listed here:
+
+    > `git clone https://github.com/ALEXKLY910/arch_notes.git Documents/arch-notes`
+
+41. Launch Hyprland to auto-creates its config.
+
+    > `start-hyprland`
+
+    Edit the config file at `~/.config/hypr/hyprland.conf` by leaving only the following:
+
+    ```
+
+
+    ```
+
+42. _Authentication agent_ (the thing that pops up a window asking you for a password whenever an app wants to elevate its privileges). We'll use **hyprpolkitagent**.
+
+    > `sudo pacman -S hyprpolkitagent`
+
+    Then open up **Hyprland** config file. Under _AUTOSTART_ section, add the following line:
+
+    > `exec-once = systemctl --user start hyprpolkitagent`
+
+43. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **mako** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
+
+    > `sudo pacman -S mako`
+
+    We don't have to wire this up manually in the config because it will be activated automatically when needed (via _D-Bus_).
+
+44. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
+
+    > `yay -S clipse`
+
+    Add this to Hyprland's config:
+
+    > `exec-once = clipse -listen`
+
+    > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
+
+    > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
+
+    Also, install `wl-clipboard` just to make the guide shut up and it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
+
+    > `sudo pacman -S wl-clipboard`
+
+45. Install a _status bar / shell_. We'll install the most popular one - **Waybar**.
+
+    > `sudo pacman -S waybar`
+
+    When prompted, choose `pipewire-jack`.
+
+    Then open up the config file and paste this under _AUTOSTART_:
+
+    > `exec-once = waybar`
+
+46. Install a _wallpaper_ daemon. We'll install **Hyprpaper**:
+
+    > `sudo pacman -S hyprpaper`
+
+    Then open up the config file and paste under _AUTOSTART_:
+
+    > `exec-once = hyprpaper`
+
+47. Edit the `~/.config/hypr/hyprland.conf` by adding the following section so that X11 apps don't render pixelated:
+
+    ```
+    xwayland {
+       force_zero_scaling = true
+       use_nearest_neighbor = false
+    }
+    ```
+
+48. Let's add **udisks2** - a disk-managing daemon that **Thunar** can ask to mount your devices. Basically that means that whenever you plug in, say, a USB, it would mount automatically.
 
     > `sudo pacman -S udisks2`
 
@@ -516,7 +731,7 @@
 
     > `exec-once = thunar --daemon`
 
-10. Configure power management on laptop.
+49. Configure power management on laptop.
     Install **TLP** - a power management tool. The default configuration is good enough so we'll not tweak it.
 
     > `sudo pacman -S tlp`
@@ -544,11 +759,11 @@
 
     Reboot to apply the changes.
 
-11. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
+50. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
 
     > `sudo pacman -S brightnessctl`
 
-12. Let's configure Bluetooth.
+51. Let's configure Bluetooth.
     1. First, install the Bluetooth stack and CLI tools:
 
        > `sudo pacman -S bluez bluez-utils`
@@ -563,7 +778,7 @@
 
     And to run it, in the **App launcher** type "Bluetooth manager"
 
-13. Disable mouse acceleration. Edit Hyprland's config file by editing this section:
+52. Disable mouse acceleration. Edit Hyprland's config file by editing this section:
 
     ```
     input{
@@ -571,7 +786,7 @@
     }
     ```
 
-14. Install **Firefox** and **Google Chrome**:
+53. Install **Firefox** and **Google Chrome**:
 
     > `sudo pacman -S firefox`
 
@@ -579,18 +794,11 @@
 
     > `yay -S google-chrome`
 
-    And configure some gestures for Google Chrome (left-right swipes for history navigation in my case):
-    Create Chrome's flagfile:
-      >`nano ~/.config/chrome-flags.conf`
-
-      Paste this:
-      >`--enable-features=TouchpadOverscrollHistoryNavigation`
-
-15. Install a simple text editor. For example, **Featherpad**:
+54. Install a simple text editor. For example, **Featherpad**:
 
     > `sudo pacman -S featherpad`
 
-16. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
+55. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
 
     > `https://github.com/Happ-proxy/happ-desktop/releases`
 
@@ -603,163 +811,3 @@
     > `pacman -Rns happ`
 
     The default configuration may break DNS resolving so in _Advanced settings_ and choose _TUN mode_ to be **gVisor**.
-17. Make the touchpad scroll natural and change its sensitivity by adding to input{} the following:
-   ```
-   touchpad {
-      natural_scroll = true
-      scroll_factor = 0.2
-   }
-   ```
-18. Configure a prettier greeting screen. Earlier we used **Tuigreet**. Now we want graphics and wallpapers and blur, so we'll use fully customizable **SDDM**. Also, we need to ditch **greetd** login daemon for that.
-
-      1. Install **SDDM** and the **Qt** packages it needs:
-
-         >`sudo pacman -S sddm qt6-base qt6-declarative qt6-wayland qt6-5compat`
-      
-      2. If the **greetd** is still running, disable it:
-
-         >`sudo systemctl disable --now greetd.service`
-
-         You'll get kicked out of the Hyprland. Reboot and log in in the TTY. Then run `start-hyprland` to get back in.
-
-      3. Download fonts for styling:
-         >`sudo pacman -S ttf-jetbrains-mono-nerd`
-
-         And update _fontconfig_'s cache so that it recognizes the new font:
-
-         >`sudo fc-cache -r`
-
-      4. Create a directory under `/usr/share/sddm/themes/` and call it the name of the theme. For example, `cherry-bloom`. And move your wallpaper there.
-
-         >`sudo mkdir /usr/share/sddm/themes/cherry-bloom`
-         >`sudo cp ~/Images/cherry_bloom_wallpaper_blur.jpg /usr/share/sddm/themes/cherry-bloom`
-
-         Now, create three files in the `/usr/share/sddm/themes/cherry-bloom`:
-         
-            - `metadata.desktop` - the entry point. The greeter reads it and gets informed that this directory is a theme and also what QML to load.
-            - `Main.qml` - the actual QML layout of the greeter screen.
-
-          Reference their contents in `SMMD` directory of the guide.
-
-      5. Create an SDDM config file that SDDM looks up when started and put there the theme directory name and the default session (Hyprland in our case, of course):
-
-         >`sudo nano /etc/sddm.conf`
-
-         ```
-         [Theme]
-         Current=cherry-bloom
-
-         [General]
-         Session=hyprland.desktop
-         GreeterEnvironment=QT_SCALE_FACTOR=1.5
-
-         ```
-      
-      6. Test the theme. Run this to preview:
-
-         > `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/cherry-bloom`
-
-      7. Make the system boot into the greeter:
-         
-         >`sudo systemctl enable sddm.service`
-      
-
-      8. Uninstall **tuigreet** and **greetd**:
-
-         >`sudo pacman -Rns greetd greetd-tuigreet`
-
-
-19. Add Russian keyboard layout inside Hyprland. Edit the Hyprland's config file by including to input{} the following:
-
-   ```
-   input {
-      kb_layout = us,ru
-      kb_options = grp:alt_shift_toggle
-   }
-   ```
-20. Remap _caps lock_ from clicking `Caps` to clicking `Caps+SHIFT` and add the following keybind:
-   >`Caps+Left` is the same as `Home`
-   >`Caps+Right` is the same as `End`
-
-   For that, install `keyd`:
-
-      >`sudo pacman -S keyd`
-   
-   Enable the daemon:
-
-      >`sudo systemctl enable --now keyd`
-
-    And edit `/etc/keyd/default.conf`:
-      ```
-      # /etc/keyd/default.conf
-
-      [ids]
-      *
-
-      [main]
-      # Turn the Caps Lock key into a momentary layer modifier.
-      capslock = layer(caps)
-
-      [caps]
-      # While holding Caps, arrows become navigation keys
-      left  = home
-      right = end
-
-      [caps+control]
-      left  = C-home
-      right = C-end
-      ```
-21. Install **fastfetch** to check your system's specs and blatantly show off:
-   >`sudo pacman -S fastfetch`
-
-   Then simply run by typing `fastfetch` in the Terminal
-
-22. Configure autocomplete in bash to always suggest options if you click Tab (and not only when there are matches). Edit `~/.inputrc`:
-   ```
-   TAB: old-menu-complete
-
-   set menu-complete-display-prefix on
-
-   set mark-directories off
-   ```
-23. Reference `arch_linux_theme_toggle.md` for writing your own theme toggle.
-
-24. Let's configure the file picker menu to open in the floating mode. First, identify what that window is called. For it, you'll need to open the window, focus it and run a command.
-   To run a command and keep the window open, add this temporary shortcut to hyprland's config:
-
-      >`bind = $mainMod SHIFT, P, exec, sh -c 'hyprctl activewindow | wl-copy'`
-
-   Then reload so hyprland knows of this shortcut.
-
-      >`hyprctl reload` 
-
-   Run the command and look for the `class` field. In my case, it was `org.freedesktop.impl.portal.desktop.kde`.
-
-   Now, in hyprland's config, add this windowrule:
-   ```
-   windowrule = match:class ^org\.freedesktop\.impl\.portal\.desktop\.kde$, float on, size (monitor_w*0.60) (monitor_h*0.70), focus_on_activate on, dim_around on
-   ```
-
-   Reload again.
-
-   You can then delete the shortcut. 
-
-25. Add lowblue mode. Install **Hypersunset**:
-
-      >`sudo pacman -S hyprsunset`
-
-   In hyprland's config add this to autostart it:
-
-      >`exec-once = hyprsunset`
-
-   Now add the keybinds:
-   ```
-   # Enable low-blue (set your preferred temperature)
-   bind = SUPER, N, exec, hyprctl hyprsunset temperature 5000
-
-   # Disable low-blue (back to normal colors)
-   bind = SUPER SHIFT, N, exec, hyprctl hyprsunset identity
-   ```
-
-   Reboot so that it all works.
-
