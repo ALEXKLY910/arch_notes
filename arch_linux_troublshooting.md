@@ -8,111 +8,87 @@ If when installing a package with pacman you encounter an error like that: faile
 
 If you really have to install .rpm package in Arch linux:
 
-1.  Create a temporary "staging" directory and cd into it.
+````
+   1.  Create a temporary "staging" directory and cd into it.
 
-> `mkdir -p ~/koala-clash-repack-rpm`
-> `cd ~/koala-clash-repack-rpm`
+   > `mkdir -p ~/koala-clash-repack-rpm`
+   > `cd ~/koala-clash-repack-rpm`
 
-2.  Download the `.rpm` package into this staging directory.
+   2.  Download the `.rpm` package into this staging directory.
 
-3.  Install `rpm-tools` (`sudo pacman -S rpm-tools`) and run the following commands to check whether the package has pre/post install scriptlets:
+   3.  Install `rpm-tools` (`sudo pacman -S rpm-tools`) and run the following commands to check whether the package has pre/post install scriptlets:
 
-> `mkdir -p ~/tmp/rpmdb`
-> `rpm --dbpath ~/tmp/rpmdb --initdb`
-> `rpm --dbpath ~/tmp/rpmdb -qp --scripts Koala.Clash.x86_64.rpm`
+   > `mkdir -p ~/tmp/rpmdb`
+   > `rpm --dbpath ~/tmp/rpmdb --initdb`
+   > `rpm --dbpath ~/tmp/rpmdb -qp --scripts Koala.Clash.x86_64.rpm`
 
-For **Koala Clash** it returns something like this:
+   For **Koala Clash** it returns something like this:
 
-```
-postinstall scritplet:
-#!/bin/bash
+   ```
+   postinstall scritplet:
+   #!/bin/bash
 
-chmod +x /usr/bin/install-service
-chmod +x /usr/bin/uninstall-service
-chmod +x /usr/bin/koala-clash-service
+   chmod +x /usr/bin/install-service
+   chmod +x /usr/bin/uninstall-service
+   chmod +x /usr/bin/koala-clash-service
 
-preuninstall scriptlet:
-#!/bin/bash
-/usr/bin/uninstall-service
-```
+   preuninstall scriptlet:
+   #!/bin/bash
+   /usr/bin/uninstall-service
+   ```
 
-We will need to recreate this behaviour in `.install` script.
+   We will need to recreate this behaviour in `.install` script.
 
-4.  Paste this into `koala-clash.install`:
+   4.  Paste this into `koala-clash.install`:
 
-```
-post_install() {
-  chmod +x /usr/bin/install-service
-  chmod +x /usr/bin/uninstall-service
-  chmod +x /usr/bin/koala-clash-service
-}
+   ```
+   post_install() {
+   chmod +x /usr/bin/install-service
+   chmod +x /usr/bin/uninstall-service
+   chmod +x /usr/bin/koala-clash-service
+   }
 
-post_upgrade() {
-chmod +x /usr/bin/install-service \
-          /usr/bin/uninstall-service \
-          /usr/bin/koala-clash-service
-}
+   post_upgrade() {
+   chmod +x /usr/bin/install-service \
+            /usr/bin/uninstall-service \
+            /usr/bin/koala-clash-service
+   }
 
-pre_remove() {
-  /usr/bin/uninstall-service || true
-}
-```
+   pre_remove() {
+   /usr/bin/uninstall-service || true
+   }
+   ```
 
-_P.s. we had to recreate postinstall scriplet using two functions here. Or else we'd lose the intended behavior. We've also added a bailout in case the uninstall script won't return successfully so that we would still be able to uninstall the software_
+   _P.s. we had to recreate postinstall scriplet using two functions here. Or else we'd lose the intended behavior. We've also added a bailout in case the uninstall script won't return successfully so that we would still be able to uninstall the software_
 
-5.  Paste this into `PKGBUILD`:
+   5.  Paste this into `PKGBUILD`:
 
-```
-pkgname=koala-clash
-pkgver=1.0
-pkgrel=1
-pkgdesc="Koala Clash (repacked from RPM for Arch)"
-arch=('x86_64')
-license=('custom')
-source=('Koala.Clash.x86_64.rpm')
-sha256sums=('SKIP')
-install=koala-clash.install
+   ```
+   pkgname=koala-clash
+   pkgver=1.0
+   pkgrel=1
+   pkgdesc="Koala Clash (repacked from RPM for Arch)"
+   arch=('x86_64')
+   license=('custom')
+   source=('Koala.Clash.x86_64.rpm')
+   sha256sums=('SKIP')
+   install=koala-clash.install
 
-package() {
-  bsdtar -xf "$srcdir/Koala.Clash.x86_64.rpm" -C "$pkgdir"
-}
-```
+   package() {
+   bsdtar -xf "$srcdir/Koala.Clash.x86_64.rpm" -C "$pkgdir"
+   }
+   ```
 
-6.  Build the package and install it:
+   6.  Build the package and install it:
 
-> `makepkg -si`
+   > `makepkg -si`
 
-7.  If the appilication doesn't start, do this troubleshooting:
-1.  First, try to start it from the Terminal and not from the App Launcher. You'll need to locate its `.desktop` file.
-
-    Run this command:
-
-    > `grep -Ril "koala" /usr/share/applications ~/.local/share/applications 2>/dev/null`
-
-    What it does is it searches for the entry "koala" recursively (`-R`), case-insensetive (`-i`) in the common directories where the `.desktop` files are usually stored. It prints out only the file paths (`-l`) of those files where there was a match. And it redirects error stream (`stderr`, file descriptor `2`) into the void.
-
-    Identify the `.desktop` file. Print its contents with `cat`. Then find `Exec` entry. And it is the actuall command to run the application. Copy it without the parameter placeholders (starting with `%`).
-
-    In the current case that command would be `koala-clash`. Yes, conveniently the same as the package name.
-
-    Finally, start the application from the Terminal with this command. It should throw an error. If says that an error was encountered while loading shared libraries and then prints the missing files, we'll have to install the libraries containing those files ourselves.
-
-1.  Identify the library package name from the missing file. Using pacman search:
-
-    > `pacman -F missing-file-name`
-
-    If you haven't done that before you may have to download the database for search first:
-
-    > `sudo pacman -Fy`
-
-    and install the package with usual `sudo pacman -S package-name`
-
-1.  If later you'll want to uninstall it, run:
-
-> `sudo pacman -Rns koala-clash`
+   7.  If the appilication doesn't start, do this troubleshooting:
+````
 
 If you really have to install .deb package in Arch linux:
 
+```
 1. Install the tool for repackaging is **Debtap**:
 
    > `yay -S debtap`
@@ -128,3 +104,39 @@ If you really have to install .deb package in Arch linux:
 4. Install the resulting archive with pacman:
 
    > `sudo pacman -U ./*.pkg.tar.zst`
+```
+
+If you want a simple UI greeter, do this:
+
+````
+**greetd** is the login daemon, **tuigreet** is the actual UI you see
+
+   > `sudo pacman -S greetd greetd-tuigreet`
+
+   Now edit the config file located at `/etc/greetd/config.toml`. Add something like:
+
+```
+
+[terminal]
+
+# TTY where the greeter runs
+
+vt = 7
+
+[default_session]
+
+# tuigreet as greeter, starting Hyprland via the _wrapper_
+
+command = "tuigreet --time --remember --asterisks --cmd start-hyprland"
+user = "greeter"
+
+```
+
+And enable **greetd** on boot:
+
+> `sudo systemctl enable --now greetd.service`
+````
+
+To run SDDM in test mode:
+
+> `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/cherry-bloom/`

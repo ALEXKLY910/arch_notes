@@ -616,7 +616,7 @@
 
 36. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** _portal backend_ so apps get a usable file picker and other dialogs:
 
-    > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk`
+    > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-kde`
 
     If prompted which _qt6 multimedia to pick_, choose `qt6-multimedia-ffmpeg`.
 
@@ -625,6 +625,7 @@
     ```
     [preferred]
     default=hyprland;gtk
+    org.freedesktop.impl.portal.FileChooser = kde
     ```
 
 37. Install the **Kitty** terminal emulator:
@@ -723,7 +724,7 @@
 
     > `sudo pacman -S hyprlock hypridle`
 
-    Copy a blurred wallpaper from the guide to `~/.config/hypr/wallpapers/`
+    Copy a blurred wallpaper from the guide into `~/.config/hypr/wallpapers/`
 
     Configure **Hyprlock**. It's configuration file is located at `~/.config/hypr/hyprlock.conf`. Paste the contents of `arch-notes/arch_linux_configs/hyprlock.conf` there.
 
@@ -731,13 +732,36 @@
 
     Then open up the config file for Hyprland and paste under _AUTOSTART_:
 
+    > `# hypridle`
     > `exec-once = hypridle`
 
     And add a manual lock keybind under _KEYBINDINGS_:
 
+    > `# hypridle`
     > `bind = SUPER, L, exec, loginctl lock-session`
 
-50. Let's add **udisks2** - a disk-managing daemon that **Thunar** can ask to mount your devices. Basically that means that whenever you plug in, say, a USB, it would mount automatically.
+50. Now let's make it so the system boots into a UI _greeter_ that then directly launches Hyprland. We'll use **SDDM**:
+    1. `sudo pacman -S sddm`. If prompted what provider to choose for _ttf-font_, choose _noto-fonts_.
+
+    2. `sudo pacman -S --needed qt6-declarative qt6-5compat ttf-jetbrains-mono-nerd`
+
+    3. Copy a blurred wallpaper from the guide into `/usr/share/sddm/themes/cherry-bloom`
+
+    4. Under `/usr/share/sddm/themes/cherry-bloom` create `Main.qml` and `metadata.desktop` and put there the contents of similarly named files from under `arch-notes/arch_linux_configs/SDDM/`.
+
+    5. Paste into `/etc/sddm.conf` the following:
+
+    ```
+    [Theme]
+    Current=cherry-bloom
+
+    [General]
+    GreeterEnvironment=QT_SCALE_FACTOR=1.5
+    ```
+
+    5. `sudo systemctl enable --now sddm.service`
+
+51. Let's add **udisks2** - a disk-managing daemon that can mount your devices.
 
     > `sudo pacman -S udisks2`
 
@@ -745,19 +769,13 @@
 
     > `udisksctl status`
 
-    But **Thunar** wouldn't be able to _directly_ talk to **udisks2**. It needs some kind of backend for that. Conveniently, that backend will also provide a _trash bin_ for us and some network browsing shit. That backend is **GVFS**. We'll also install `gvfs-mtp` for Android compatibility (if we'll ever decide to browse our Android phone through USB-C) and `thunar-volman` - a Thunar extension that actually does removable media management - without it USBs still won't automount.
+    It needs some kind of backend. Conveniently, that backend will also provide a _trash bin_ for us and some network browsing shit. That backend is **GVFS**. We'll also install `gvfs-mtp` for Android compatibility (if we'll ever decide to browse our Android phone through USB-C). And **udiskie** - the automounter.
 
-    > `sudo pacman -S gvfs thunar-volman gvfs-mtp`
+    > `sudo pacman -S gvfs gvfs-mtp udiskie`
 
-    Then turn on Thunar's volume manager:
+    > `exec-once = udiskie --automount --no-notify`
 
-    > Open Thunar, go to Edit -> Preferences -> Advanced and check "Enable Volume Management". Then click "Configure" and enable the behavior you want.
-
-    And finally in _Hyprland config_ write this under _AUTOSTART_ to make automount work even when no Thunar is actually launched:
-
-    > `exec-once = thunar --daemon`
-
-51. Configure power management on laptop.
+52. Configure power management on laptop.
     Install **TLP** - a power management tool. The default configuration is good enough so we'll not tweak it.
 
     > `sudo pacman -S tlp`
@@ -785,11 +803,11 @@
 
     Reboot to apply the changes.
 
-52. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
+53. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
 
     > `sudo pacman -S brightnessctl`
 
-53. Let's configure Bluetooth.
+54. Let's configure Bluetooth.
     1. First, install the Bluetooth stack and CLI tools:
 
        > `sudo pacman -S bluez bluez-utils`
@@ -804,15 +822,7 @@
 
     And to run it, in the **App launcher** type "Bluetooth manager"
 
-54. Disable mouse acceleration. Edit Hyprland's config file by editing this section:
-
-    ```
-    input{
-       accel_profile = flat
-    }
-    ```
-
-55. Install **Firefox** and **Google Chrome**:
+55. Install **Firefox** and/or **Google Chrome**:
 
     > `sudo pacman -S firefox`
 
@@ -820,11 +830,40 @@
 
     > `yay -S google-chrome`
 
-56. Install a simple text editor. For example, **Featherpad**:
+56. Install lowblue mode.
+    1. > `sudo pacman -S hyprsunset`
+    2. In `~/.config/hypr/hyprland.conf` paste:
 
-    > `sudo pacman -S featherpad`
+       ```
+       exec-once hyprsunset
 
-57. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
+       bind = SUPER, N, exec, hyprctl hyprsunset temperature 5000
+
+       bind = SUPER SHIFT, N, exec, hyprctl hyprsunset identity
+       ```
+
+57. Remap the Caps key to be a modifier and add the shortcuts for Home and End:
+
+    > `sudo pacman -S keyd`
+    > `sudo nano /etc/keyd/default.conf`
+
+         ```
+         [ids]
+         *
+
+         [main]
+         capslock = layer(caps)
+
+         [caps]
+         left = home
+         right = end
+         C-left = C-home
+         C-right = C-end
+         ```
+
+    > `sudo systemctl enable --now keyd`
+
+58. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
 
     > `https://github.com/Happ-proxy/happ-desktop/releases`
 

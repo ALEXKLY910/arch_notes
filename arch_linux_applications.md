@@ -1,4 +1,3 @@
-1. VS Code:
-    >`sudo pacman -S code`
+1. VS Code (Microsoft Build):
 
-2. 
+   > `yay -S visual-studio-code-bin`

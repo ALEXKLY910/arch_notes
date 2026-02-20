@@ -1,1 +1,1 @@
-    org.freedesktop.impl.portal.FileChooser=kde
+2. `sudo pacman -S featherpad`
