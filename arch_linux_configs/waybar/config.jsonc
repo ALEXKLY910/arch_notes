@@ -1,0 +1,113 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 30,
+  "margin": "0",
+  "spacing": 10,
+  "no-center": true,
+  "reload_style_on_change": true,
+
+  "modules-left": [
+    "clock"
+  ],
+  "modules-right": [
+    "group/audio",
+    "group/brightness",
+    "battery",
+    "network",
+    "tray"
+  ],
+
+  "clock": {
+    "format": "{:%H:%M %d.%m}",
+    "tooltip-format": "{:%A, %d %B %Y}",
+    "on-click": "gsimplecal"
+  },
+
+  "group/audio": {
+  "orientation": "horizontal",
+  "drawer": {
+    "click-to-reveal": true,
+    "transition-duration": 180,
+    "transition-left-to-right": true
+  },
+  "modules": [
+    "custom/vol",
+    "pulseaudio/slider",
+    "custom/mute"
+  ]
+},
+
+"custom/vol": {
+  "interval": 1,
+  "exec": "~/.config/waybar/scripts/volume.sh",
+  "on-scroll-up": "~/.config/waybar/scripts/volume.sh up",
+  "on-scroll-down": "~/.config/waybar/scripts/volume.sh down",
+  "cursor": 60
+},
+
+"custom/mute": {
+  "format": "󰝟",
+  "tooltip": false,
+  "on-click": "~/.config/waybar/scripts/volume.sh mute",
+  "cursor": 60
+},
+
+"group/brightness": {
+  "orientation": "horizontal",
+  "drawer": {
+    "click-to-reveal": true,
+    "transition-duration": 180,
+    "transition-left-to-right": true
+  },
+  "modules": [
+    "custom/br",
+    "backlight/slider"
+  ]
+},
+
+"custom/br": {
+  "interval": 1,
+  "exec": "bash -lc '\nif command -v brightnessctl >/dev/null 2>&1; then\n  cur=$(brightnessctl g)\n  max=$(brightnessctl m)\n  pct=$(( cur * 100 / max ))\n  printf \"󰃠 %s%%\\n\" \"$pct\"\nelse\n  printf \"󰃠 ?%%\\n\"\nfi\n'",
+  "on-scroll-up": "bash -lc 'command -v brightnessctl >/dev/null 2>&1 && brightnessctl set +1% >/dev/null'",
+  "on-scroll-down": "bash -lc 'command -v brightnessctl >/dev/null 2>&1 && brightnessctl set 1%- >/dev/null'",
+  "cursor": 60
+},
+
+  "backlight/slider": {
+    "orientation": "horizontal"
+  },
+
+  "battery": {
+  "format": "{capacity}%",
+  "format-discharging": "{capacity}%",
+  "format-not-charging": "{capacity}%",
+  "format-charging": " {capacity}%",
+  "format-plugged": " {capacity}%",
+  "format-full": "{capacity}%",
+  "tooltip": true,
+  "tooltip-format": "{capacity}%\n{timeTo}",
+  "format-time": "{H}:{m}"
+},
+
+  "network": {
+    "interval": 5,
+
+    "format-wifi": "{icon}",
+    "format-icons": ["󰤟", "󰤢", "󰤥", "󰤨"],
+
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤮",
+
+    "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+    "tooltip-format-ethernet": "Ethernet",
+    "tooltip-format-disconnected": "No connection",
+
+    "on-click": "ghostty -e nmtui"
+  },
+
+  "tray": {
+    "icon-size": 16,
+    "spacing": 8
+  }
+}

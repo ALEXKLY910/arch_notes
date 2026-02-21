@@ -17,6 +17,9 @@ DID:
 
 ```
 
+
+use a different app launcher because the hyprlauncher has a persistent interface bug.
+
 Configure Waybar (https://wiki.hypr.land/Useful-Utilities/Status-Bars/). Add the current keyboard layout to display there.
 
 Configure Ghostty.

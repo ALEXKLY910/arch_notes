@@ -916,3 +916,29 @@
 
       Reload so that you can use it:
          >`hyprctl reload`
+
+60. Configure Waybar. 
+
+      1. Install the calendar utility: 
+         >`sudo pacman -S gsimplecal`
+         Put into `~/.config/gsimplecal/config` this:
+         ```
+         mainwindow_decorated = 0
+         mainwindow_keep_above = 1
+         mainwindow_skip_taskbar = 1
+         mainwindow_resizable = 0
+         close_on_unfocus = 1
+         mainwindow_position = none
+         ```
+         Add these rules to `~/.confg/hypr/hyprland.conf`:
+         ```
+         windowrule = match:class ^(gsimplecal)$, float on, move 6 32
+         ```
+      2. Create 
+         > `~/.config/waybar/config.jsonc`
+         > `~/.config/waybar/style.css`
+         > `~/.config/waybar/scripts/volume.sh`
+         
+         All the scripts must be made executable with `chmod +x` command.
+
+        and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
