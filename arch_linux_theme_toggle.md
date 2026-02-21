@@ -1,47 +1,21 @@
-1. Install GTK backend and some plumbing:
-    >`sudo pacman -S xdg-desktop-portal-gtk dconf gsettings-desktop-schemas`
+1. Install necessary packages:
+    >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze`
+    >`yay -S hyprqt6engine`
 
-2. Make Hyprland export the session environment for user services. Put this into `~/.config/hypr/hyprland.conf` near the top:
+2. Make Hyprland export **hyprqt6engine** for user services. Put this into `~/.config/hypr/hyprland.conf` near the top:
     ```
-    env = XDG_CURRENT_DESKTOP,Hyprland
-    env = XDG_SESSION_DESKTOP,Hyprland
-    env = XDG_SESSION_TYPE,wayland
+    env = QT_QPA_PLATFORMTHEME,hyprqt6engine
 
-    exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
-    exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+    exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP QT_QPA_PLATFORMTHEME
     ```
 
     Then reboot so the portals are properly restarted.
+
 3. Create `~/.local/bin/toggle-theme` file:
     >`mkdir -p ~/.local/bin`
     >`touch ~/.local/bin/toggle-theme`
     >`chmod +x ~/.local/bin/toggle-theme`
 
-4. Make Qt apps use the system theme we control with the toggle.
-    >`yay -S hyprqt6engine`
-
-    Then in `~/.config/hypr/hyprland.conf` set:
-    >`env = QT_QPA_PLATFORMTHEME,hyprqt6engine`
-
-    Install the color scheme for them:
-    >`sudo pacman -S breeze`
-
-    Those files land at `/usr/share/color-schemes/BreezeLight.colors` and `/usr/share/color-schemes/BreezeDark.colors`.
-
-    Create `~/.config/hypr/hyprqt6engine.conf` and paste this:
-    ```
-    theme {
-    style = Fusion
-    icon_theme = Breeze
-    color_scheme = /usr/share/color-schemes/BreezeDark.colors
-    }
-
-    misc {
-    single_click_activate = true
-    menus_have_icons = true
-    shortcuts_for_context_menus = true
-    }
-    ```
 
 5. Paste the following into `~/.local/bin/toggle-theme`:
 

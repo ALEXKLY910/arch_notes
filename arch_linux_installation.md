@@ -626,6 +626,7 @@
     [preferred]
     default=hyprland;gtk
     org.freedesktop.impl.portal.FileChooser = kde
+    org.freedesktop.impl.portal.Settings = gtk
     ```
 
 37. Install the **Kitty** terminal emulator:
