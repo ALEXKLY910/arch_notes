@@ -34,9 +34,11 @@ fi
 
 if [[ "$is_new_dark" == "true" ]]; then
   gtk_theme="Adwaita-dark"
+  qt_icon_theme="breeze-dark"
   qt_scheme="/usr/share/color-schemes/BreezeDark.colors"
 else
   gtk_theme="Adwaita"
+  qt_icon_theme="breeze"
   qt_scheme="/usr/share/color-schemes/BreezeLight.colors"
 fi
 
@@ -71,3 +73,18 @@ grep -Eq '^[[:space:]]*color_scheme[[:space:]]*=' "$cfg" \
   || { echo "$cfg exists but has no 'color_scheme =' line" >&2; exit 1; }
 
 sed -i -E "s|^([[:space:]]*color_scheme[[:space:]]*=[[:space:]]*).*$|\\1$qt_scheme|" "$cfg"
+
+grep -Eq '^[[:space:]]*icon_theme[[:space:]]*=' "$cfg" \
+  || { echo "$cfg exists but has no 'icon_theme =' line" >&2; exit 1; }
+
+sed -i -E "s|^([[:space:]]*icon_theme[[:space:]]*=[[:space:]]*).*$|\\1$qt_icon_theme|" "$cfg"
+
+command -v plasma-apply-colorscheme >/dev/null 2>&1 || { echo "Missing plasma-apply-colorscheme" >&2; exit 1; }
+
+if [[ "$is_new_dark" == "true" ]]; then
+  plasma-apply-colorscheme BreezeDark
+else
+  plasma-apply-colorscheme BreezeLight
+fi
+
+systemctl --user restart plasma-xdg-desktop-portal-kde.service

@@ -14,7 +14,7 @@
     ```
     theme {
     style = Fusion
-    icon_theme = Breeze
+    icon_theme = breeze
     color_scheme = /usr/share/color-schemes/BreezeLight.colors
     }
     misc {
