@@ -1,5 +1,5 @@
 1. Install necessary packages:
-    >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze`
+    >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze gnome-themes-extra`
     >`yay -S hyprqt6engine`
 
 2. Make Hyprland export **hyprqt6engine** for user services. Put this into `~/.config/hypr/hyprland.conf` near the top:
