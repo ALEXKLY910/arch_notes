@@ -29,10 +29,7 @@
     >`touch ~/.local/bin/toggle-theme`
     >`chmod +x ~/.local/bin/toggle-theme`
 
-
-5. Paste the following into `~/.local/bin/toggle-theme`:
-
-
+5. Paste the contents of `arch-notes/arch_linux_configs/toggle-theme.sh` into `~/.local/bin/toggle-theme`.
 
 6. Bind it in Hyprland. Add this to `~/.config/hypr/hyprland.conf`:
     >`bind = $mainMod SHIFT, T, exec, ~/.local/bin/toggle-theme`
