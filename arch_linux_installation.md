@@ -641,9 +641,9 @@
 
     > `sudo pacman -S thunar`
 
-40. Install an _app launcher_. We'll install **Hyprlauncher**:
+40. Install an _app launcher_. We'll install **Fuzzel**:
 
-    > `sudo pacman -S hyprlauncher`
+    > `sudo pacman -S fuzzel`
 
 41. Download this guide to your machine in order to reference config files listed here:
 
@@ -909,7 +909,7 @@
          >`touch ~/.local/bin/toggle-theme`
          >`chmod +x ~/.local/bin/toggle-theme`
 
-      5. Paste the contents of `arch-notes/arch_linux_configs/toggle-theme.sh` into `~/.local/bin/toggle-theme`.
+      5. Paste the contents of `arch-notes/arch_linux_configs/toggle-theme-first.sh` into `~/.local/bin/toggle-theme`.
 
       6. Bind it in Hyprland. Add this to `~/.config/hypr/hyprland.conf`:
          >`bind = $mainMod SHIFT, T, exec, ~/.local/bin/toggle-theme`
@@ -917,7 +917,48 @@
       Reload so that you can use it:
          >`hyprctl reload`
 
-60. Configure Waybar. 
+60. Configure Fuzzel to have a dark theme.
+      1. Create `~/.config/fuzzel/themes/`.
+      2. Create `~/.config/fuzzel/themes/dark-modern.ini` and paste this inside:
+      ```
+      [colors]
+      background=1f1f1fff
+      text=ccccccff
+      match=4daafcff
+      selection=0078d4cc
+      selection-text=ffffffff
+      selection-match=4daafcff
+      border=2b2b2bff
+      prompt=ccccccff
+      placeholder=989898ff
+      input=ccccccff
+      counter=9d9d9dff
+      ```
+      3. Create `~/.config/fuzzel/themes/light.ini` and leave it empty.
+      4. Create `~/.config/fuzzel/fuzzel.ini` and paste this inside:
+      ```
+      [main]
+      include=~/.config/fuzzel/themes/current.ini
+      ```
+      5. Create a symlink, say, to dark:
+
+         > `ln -sf ~/.config/fuzzel/themes/dracula.ini ~/.config/fuzzel/themes/current.ini`
+
+      6. Switch the destination of the symlink between `dracula.ini` and `light.ini` based on the current system theme in the `toggle-theme` script. Add this somewhere after declaring `is_new_dark` variable:
+      ```
+      if [[ "$is_new_dark" == "true" ]]; then
+         fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini"
+      else
+         fuzzel_scheme="~/.config/fuzzel/themes/light.ini"
+      fi
+
+      [[ -f "$fuzzel_scheme"]] || {echo "Missing fuzzel color scheme file: $fuzzel_scheme" >&2; exit 1; }
+
+      ln -sf $fuzzel_scheme ~/.config/fuzzel/themes/current.ini
+      ```
+
+
+61. Configure Waybar. 
 
       1. Install the calendar utility: 
          >`sudo pacman -S gsimplecal`
@@ -942,3 +983,28 @@
          All the scripts must be made executable with `chmod +x` command.
 
         and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
+62. Install **zapret**.
+      1. `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux`
+      2. `sudo bash main_script.sh`
+
+         Включить GameFilter -> n
+         Доступные статегии: ... -> ./general_alt.bat
+         Доступные сетевые интерфейсы: ... -> wlp3s0
+      
+
+      3. Run the service: `sudo bash service.sh general_alt.bat` (from a random directory: `sudo bash ~/zapret-discord-youtube-linux/service.sh general_alt.bat`)
+      4. Check whether it's running: `sudo bash service.sh --status`
+      5. Stop the service: `sudo bash service.sh --stop`
+
+      6. If you want a keybind for that:
+
+         Create `~/.local/bin/toggle-zapret`, make it executable with `chmod +x`, paste inside the contents of `arch-notes/arch_linux_configs/toggle-zapret` inside and make it run without asking for password: run `sudo EDITOR=nano visudo -f /etc/sudoers.d/zapret` and paste this:
+            ```
+            alex ALL=(root) NOPASSWD: \
+            /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --status, \
+            /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --stop, \
+            /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh general_alt.bat
+            ```
+         Add this line to `~/.config/hypr/hyprland.conf`:
+         `bind = SUPER SHIFT, Z, exec, ~/.local/bin/toggle-zapret`
+         And update: `hyprctl reload`

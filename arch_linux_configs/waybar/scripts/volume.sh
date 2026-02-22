@@ -6,7 +6,7 @@ action="${1:-print}"
 if command -v wpctl >/dev/null 2>&1; then
   sink='@DEFAULT_AUDIO_SINK@'
   case "$action" in
-    up)   wpctl set-volume -l 1.5 "$sink" 1%+ ;;
+    up)   wpctl set-volume -l 1.0 "$sink" 1%+ ;;
     down) wpctl set-volume        "$sink" 1%- ;;
     mute) wpctl set-mute          "$sink" toggle ;;
     print|*)

@@ -5,7 +5,10 @@ Configure notifications
 THE PLAN:
 
 ```
-Install a different app launcher.
+On reboot waybar's icons are grey, but when I toggle the theme once they are forever white.
+
+If I first hold alt and press shift, the keyboard layout changes. But if I first hold shift and press alt, it changes but I can't continue typing unless I regain focus. In VS Code. Probably because Alt+Shift is a keybind in VS Code.
+
 Try to figure out zapret
 Try to implement APO Equalizer
 
@@ -19,7 +22,7 @@ VLC media player
 
 ```
 
-
+Configure notifications.
 
 
 Screenshots.
