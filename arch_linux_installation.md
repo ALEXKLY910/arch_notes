@@ -831,7 +831,15 @@
 
     > `yay -S google-chrome`
 
-56. Install lowblue mode.
+56. VS Code (Microsoft Build):
+
+   > `yay -S visual-studio-code-bin`
+
+57. **Nerd** fonts:
+   >`sudo pacman -S ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-emoji`
+   >`fc-cache -r`
+
+58. Install lowblue mode.
     1. > `sudo pacman -S hyprsunset`
     2. In `~/.config/hypr/hyprland.conf` paste:
 
@@ -843,7 +851,7 @@
        bind = SUPER SHIFT, N, exec, hyprctl hyprsunset identity
        ```
 
-57. Remap the Caps key to be a modifier and add the shortcuts for Home and End:
+59. Remap the Caps key to be a modifier and add the shortcuts for Home and End:
 
     > `sudo pacman -S keyd`
     > `sudo nano /etc/keyd/default.conf`
@@ -864,7 +872,7 @@
 
     > `sudo systemctl enable --now keyd`
 
-58. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
+60. Install VPN. I'll install **Happ**. It doesn't have a pacman package of course and the stuff on AUR seems sketchy. So we'll grab a `pkg.tar.zst` from the official Github repo:
 
     > `https://github.com/Happ-proxy/happ-desktop/releases`
 
@@ -877,7 +885,7 @@
     > `pacman -Rns happ`
 
     The default configuration may break DNS resolving so in _Advanced settings_ and choose _TUN mode_ to be **gVisor**.
-59. Add a theme toggle.
+61. Add a theme toggle.
       1. Install necessary packages:
          >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze gnome-themes-extra`
          >`yay -S hyprqt6engine`
@@ -917,7 +925,7 @@
       Reload so that you can use it:
          >`hyprctl reload`
 
-60. Configure Fuzzel to have a dark theme.
+62. Configure Fuzzel to have a dark theme.
       1. Create `~/.config/fuzzel/themes/`.
       2. Create `~/.config/fuzzel/themes/dark-modern.ini` and paste this inside:
       ```
@@ -946,6 +954,8 @@
 
       6. Switch the destination of the symlink between `dracula.ini` and `light.ini` based on the current system theme in the `toggle-theme` script. Add this somewhere after declaring `is_new_dark` variable:
       ```
+      # Wire up fuzzel's theme
+      
       if [[ "$is_new_dark" == "true" ]]; then
          fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini"
       else
@@ -957,8 +967,7 @@
       ln -sf $fuzzel_scheme ~/.config/fuzzel/themes/current.ini
       ```
 
-
-61. Configure Waybar. 
+63. Configure Waybar. 
 
       1. Install the calendar utility: 
          >`sudo pacman -S gsimplecal`
@@ -983,7 +992,7 @@
          All the scripts must be made executable with `chmod +x` command.
 
         and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
-62. Install **zapret**.
+64. Install **zapret**.
       1. `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux`
       2. `sudo bash main_script.sh`
 
@@ -1008,3 +1017,89 @@
          Add this line to `~/.config/hypr/hyprland.conf`:
          `bind = SUPER SHIFT, Z, exec, ~/.local/bin/toggle-zapret`
          And update: `hyprctl reload`
+65. Configure screenshots:
+      1. Install the tools for screenshotting:
+
+         >`sudo pacman -S grim slurp`
+      
+      2. Bind _fullscreen screenshot to clipboard_ to _SUPER+D_;
+
+         bind _fullscreen screenshot to file_ to _SUPER+CTRL+D_;
+
+         bind _partial screenshot to clipboard_ to _SUPER+SHIFT+D_;
+
+         bind partial screenshot to file_ to _SUPER+SHIFT+CTRL+D_
+
+         by pasting to `~/.config/hypr/hyprland` the following:
+         ```
+         # Fullscreen -> clipboard (SUPER + D)
+         bind = SUPER, D, exec, grim - | wl-copy && notify-send "Screenshot" "Fullscreen copied to clipboard"
+
+         # Fullscreen -> file (SUPER + CTRL + D)
+         bind = SUPER CTRL, D, exec, mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/shot-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Fullscreen saved to Pictures/Screenshots"
+
+         # Partial -> clipboard (SUPER + SHIFT + D)
+         bind = SUPER SHIFT, D, exec, grim -g "$(slurp)" - | wl-copy && notify-send "Screenshot" "Selection copied to clipboard"
+
+         # Partial -> file (SUPER + SHIFT + CTRL + D)
+         bind = SUPER SHIFT CTRL, D, exec, mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/area-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Selection saved to Pictures/Screenshots"
+         ```
+
+66. Configure ghostty:
+      1. Check out solarized themes:
+      
+      >`ghostty +list-themes --plain`
+
+      I'm gonna pick "Builtin Solarized Light" and "Dark Modern". 
+
+      2. Create a file at `~/.config/ghostty/themes/default-light.conf`. Paste inside it:
+      
+      ```
+      theme="Builtin Solarized Light"
+      ```
+      3. Create a file at `~/.config/ghostty/themes/default-dark.conf`. Paste inside it:
+      
+      ```
+      theme="Dark Modern"
+      ```
+      4. Create a symlink to one of them:
+
+      >`ln -sf ~/.config/ghostty/themes/default-light.conf ~/.config/ghostty/themes/current.conf`
+
+      5. Create a file at `~/.config/ghostty/config` and paste inside it:
+      ```
+      config-file = themes/current.conf
+      ```
+      6. Paste this to our toggle script beneath the `is_new_dark` variable declaration:
+      ```
+      #Wire up ghostty's theme
+
+      if [[ "$is_new_dark" == "true" ]]; then
+         ghostty_scheme="$HOME/.config/ghostty/themes/default-dark.conf"
+      else
+         ghostty_scheme="$HOME/.config/ghostty/themes/default-light.conf"
+      fi
+
+      [[ -f "$ghostty_scheme" ]] || { echo "Missing ghostty color scheme file: $ghostty_scheme" >&2; exit 1; }
+
+      ln -sf $ghostty_scheme $HOME/.config/ghostty/themes/current.conf
+      ```
+67. Configure fuzzy search across your filesystem:
+    1. > `sudo pacman -S fzf`  
+
+    2. Add to `~/.bashrc`
+    ```
+    # fzf keybindings + completion
+    [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
+    [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
+    ```
+
+    Then reload:
+    > `source ~/.bashrc`
+
+    Now you can type `Ctrl+T` in a shell and fuzzy search!
+      
+68. Configure an Dynamic Equalizer:
+   1. `sudo pacman -S easyeffects lsp-plugins-lv2`
+   2. Launch easyeffects. Export from `arch-notes/arch_linux_installation/dac-pr1-pro-nova.json` the preset. 
+   3. To find your current presets, look for them in `

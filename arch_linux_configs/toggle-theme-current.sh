@@ -45,11 +45,29 @@ fi
 [[ -f "$qt_scheme" ]] \
   || { echo "Missing Qt color scheme file: $qt_scheme (install 'breeze')" >&2; exit 1; }
 
+#Wire up ghostty's theme
+
+if [[ "$is_new_dark" == "true" ]]; then
+    ghostty_scheme="$HOME/.config/ghostty/themes/default-dark.conf"
+else
+    ghostty_scheme="$HOME/.config/ghostty/themes/default-light.conf"
+fi
+
+[[ -f "$ghostty_scheme" ]] || { echo "Missing ghostty color scheme file: $ghostty_scheme" >&2; exit 1; }
+
+ln -sf $ghostty_scheme $HOME/.config/ghostty/themes/current.conf
+
+#reload ghostty's config
+pkill -USR2 -x ghostty
+
+# Wire up fuzzel's theme
 if [[ "$is_new_dark" == "true" ]]; then
     fuzzel_scheme="$HOME/.config/fuzzel/themes/dark-modern.ini"
+
 else
     fuzzel_scheme="$HOME/.config/fuzzel/themes/light.ini"
 fi
+
 
 [[ -f "$fuzzel_scheme" ]] || { echo "Missing fuzzel color scheme file: $fuzzel_scheme" >&2; exit 1; }
 
