@@ -5,15 +5,12 @@ Configure notifications
 THE PLAN:
 
 ```
-Browser gestures
-
-a notepad
 an image viewer
 VLC media player
 
 ```
 
-Configure notifications.
+
 
 
 Text extractor.

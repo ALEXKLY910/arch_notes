@@ -665,11 +665,13 @@
     > `# authentication agent`
     > `exec-once = systemctl --user start hyprpolkitagent`
 
-44. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **mako** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
+44. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **dunst** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
 
-    > `sudo pacman -S mako`
+    > `sudo pacman -S dunst`
+   
+   And paste in `~/.config/hypr/hyprland.conf`:
 
-    We don't have to wire this up manually in the config because it will be activated automatically when needed (via _D-Bus_).
+   >`exec-once = dunst`
 
 45. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
 
@@ -685,6 +687,8 @@
     > `# clipboard`
     > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
     > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
+
+    Open up its config file at `.config/clipse/config.json` and edit "maxHistory":500 and "maxEntryLength": 300 and "pollInterval": 150.
 
     Also, install `wl-clipboard`, it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 
@@ -1069,6 +1073,11 @@
       5. Create a file at `~/.config/ghostty/config` and paste inside it:
       ```
       config-file = themes/current.conf
+
+      # stop some TUI apps from using near-background colors on text
+      minimum-contrast = 2
+
+      font-size=14
       ```
       6. Paste this to our toggle script beneath the `is_new_dark` variable declaration:
       ```
@@ -1083,6 +1092,10 @@
       [[ -f "$ghostty_scheme" ]] || { echo "Missing ghostty color scheme file: $ghostty_scheme" >&2; exit 1; }
 
       ln -sf $ghostty_scheme $HOME/.config/ghostty/themes/current.conf
+
+      #reload ghostty's config
+      pkill -USR2 -x ghostty
+
       ```
 67. Configure fuzzy search across your filesystem:
     1. > `sudo pacman -S fzf`  
@@ -1102,4 +1115,26 @@
 68. Configure an Dynamic Equalizer:
    1. `sudo pacman -S easyeffects lsp-plugins-lv2`
    2. Launch easyeffects. Export from `arch-notes/arch_linux_installation/dac-pr1-pro-nova.json` the preset. 
-   3. To find your current presets, look for them in `
+   3. To find your current presets, look for them in `.local/share/easyeffects/output/`
+
+69. Configure **dunst** (notification daemon):
+      Paste into `~/.config/dunst/dunstrc` the contents of `arch-notes/arch_linux_configs/dunst.conf`.
+      Paste into `~/.config/hypr/hyprland.conf` the following (use existing animations{} block if needed):
+      ```
+      animations{
+         bezier = notifEase, 0.22, 1.00, 0.36, 1.00
+
+         animation = layersIn,       1, 3.5, notifEase, slide top
+         animation = layersOut,      1, 2.6, notifEase, slide top
+         animation = fadeLayersIn,   1, 2.0, notifEase
+         animation = fadeLayersOut,  1, 2.6, notifEase
+      }
+
+      layerrule = blur on, match:namespace dunst
+      layerrule = ignore_alpha 0.20, match:namespace dunst
+      layerrule = animation slide top, match:namespace dunst
+      ```
+70. Download a simple text editor:
+
+   >`sudo pacman -S kwrite`
+

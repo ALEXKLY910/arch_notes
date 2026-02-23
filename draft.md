@@ -1,3 +1,5 @@
-2. `sudo pacman -S featherpad`
+sudo pacman -S gwenview
 
- 
+
+
+
