@@ -58,7 +58,7 @@
 
     ```
 
-3.  Prepare the installation medium. Plug in a USB drive with NO useful data on it (it will be erased). We'll need to partition it and format it to FAT32 using **diskpart** (a Windows tool for manipulating disks and partitions, preinstalled on every relevant Windows version); you will need to run the following commands _as an Administrator_. This will work for UEFI-boots only - which is fine by us since that's what we're gon na be using anyway:
+3.  Prepare the installation medium. Plug in a USB drive with NO useful data on it (it will be erased). We'll need to partition it and format it to FAT32 using **diskpart** (a Windows tool for manipulating disks and partitions, preinstalled on every relevant Windows version); you will need to run the following commands _as an Administrator_. This will work for UEFI-boots only - which is fine by us since that's what we're gonna be using anyway:
     1. Start an interactive shell inside of which we will run all the following commands:
 
        > `diskpart`
@@ -107,10 +107,13 @@
 
     12. When done copying, right click on the DVD drive and select Eject.
 
-4.   Boot the live environment
-    1.  Disable the **UEFI Secure boot**, because Arch Linux installation images do not support it:
-        - Go to UEFI firmware interface, navigate to Security tab, find Secure boot, disable it. The process may differ from interface to interface, but should be pretty intuitive. Save the changes and exit the interface.
-    2.  Open the Boot menu and boot from the USB. When the installation medium's boot menu appears, select _Arch Linux install medium_.
+4.   Boot the live environment  
+
+      1.  Disable the **UEFI Secure boot**, because Arch Linux installation images do not support it:
+      Go to UEFI firmware interface, navigate to Security tab, find Secure boot, disable it. The process may differ from interface to interface, but should be pretty intuitive. Save the changes and exit the interface.  
+
+      2.  Open the Boot menu and boot from the USB. When the installation medium's boot menu appears, select _Arch Linux install medium_.  
+
 5.  Set the console font to a bigger one:
     > `setfont ter-132b`
 6.  Verify that you are booted in UEFI mode. This command should return `64`:
@@ -184,9 +187,9 @@
 
        > `n`
 
-       It will ask for:
-       - partition number. Simply press Enter and go with the default one
-       - first sector. Press Enter, take default
+       It will ask for (don't input anything yet):
+       - partition number. Pressing Enter would take the default one
+       - first sector. Same, pressing Enter would take the default one
        - Last sector. This is where you define the size of the partition. You write +512M to assign it to be 512MB, +1G corresponds to 1GB, and etc. Pressing Enter would assign all remaining space on the _device_.
 
        First we'll create the _EFI partition_. The recommended size for it the guide suggests is 1GB.  
@@ -205,13 +208,13 @@
 
        We would do: `n`, **Enter**, **Enter**, **Enter** (to take all remaining space).
 
-       We won't configure _swap partition_ for now. We got good 8GB of RAM and _swap_ is not strictly needed.
+       We won't configure _swap partition_ for now. Later we'll configure swap differently.
 
        Now to check the draft of all the partitions we are about to commit, run:
 
        > `p`
 
-       And finally, to commit all the changes (**THINK TWICE BEFORE DOING IT**), run:
+       And finally, to commit all the changes (**it will of course erase all the data**), run:
 
        > `w`
 
@@ -232,17 +235,18 @@
     > `lsblk -f`
 
 11.  Mount the file systems
-    1. Mount the _root partition_ to `/mnt`:
 
-       > `mount /dev/root_partition /mnt`
+      1. Mount the _root partition_ to `/mnt`:
 
-    2. Mount the _EFI partition_ to `/mnt/boot`:
+         > `mount /dev/root_partition /mnt`
 
-       > `mount --mkdir /dev/efi_partition /mnt/boot`
+      2. Mount the _EFI partition_ to `/mnt/boot`:
 
-    To verify that you mounted correct partitions to correct mountpoints, run:
+         > `mount --mkdir /dev/efi_partition /mnt/boot`
 
-    > `lsblk`
+      3. To verify that you mounted correct partitions to correct mountpoints, run:  
+
+         >`lsblk`
 
 12. The following command installs a minimal Arch system (base userland, Linux kernel, firmware) into /mnt and copies the pacman keyring so package signature verification works in the new install. It also installs the CPU microcode (for patching some low-level hardware bugs: for Intel it's `intel-ucode`; for AMD it's `amd-ucode`), `networkmanager` and `nano` (the text editor):
 
@@ -380,10 +384,10 @@
 
        > `FONT=ter-132b`
 
-25. Let's add a user, because always being root is extremely unsafe. I'll add a new user, call him `alex`. I'll add him to the `wheel` group - a group of users that conventionally gets granted the access to `sudo` - a tool that lets a user run commands with root priviliges.
+25. Let's add a user, because always being root is extremely unsafe. I'll add a new user, call him `alex`. I'll add him to the `wheel` group - a group of users that conventionally later gets the access to `sudo` - a tool that lets a user run commands with root priviliges.
      1. First lets create the user and add him to the group. Also, it's worth setting the `login shell` that will be used for this user later, I'll stick with `bash`. `-m` flag creates a `/home/username` directory:
 
-       > `useradd -m -G wheel -s /bin/bash alex`
+         > `useradd -m -G wheel -s /bin/bash alex`
 
     2. Then let's set the user's password:
 
@@ -410,11 +414,11 @@
 
          > `su - alex`
 
-       - quick check that the `sudo` works. This command doesn't do anything other than validates your `sudo` credentials and makes you authenticated for some time so that you won't have to enter your password each time if, say, you have to run several elevated commands in a row. The timer is 5 minutes on most systems. _(To kill the timer, you run `sudo -k`)_:
+       - quick check that `sudo` works. This command doesn't do anything other than validates your `sudo` credentials and makes you authenticated for some time so that you won't have to enter your password each time if, say, you have to run several elevated commands in a row. The timer is 5 minutes on most systems. _(To kill the timer, you run `sudo -k`)_:
 
          > `sudo -v`
 
-### Now we created a user. We won't be logging in as `root` anymore for now. So, run `reboot` and log in as the user. And keep logging in as the user in the future.
+### Now we created a user. We won't be logging in as `root` anymore. So, run `reboot` and log in as the user. And keep logging in as the user in the future.
 
 ## The next step would be installing drivers.
 
@@ -428,7 +432,7 @@
       > [multilib]  
       > Include = /etc/pacman.d/mirrorlist
 
-    - update the package databases to enable the changes. The following command will also update the installed packages to be up-to-date:
+    - update the package databases to enable the changes. The following command will also make the installed packages be up-to-date:
 
       > `sudo pacman -Syu`
 
@@ -437,7 +441,7 @@
 28. Install **Mesa** _userspace driver stack_. Without it the system would render graphics using CPU which is ineffective in all the possible ways.
      1. Install `mesa`, `lib32-mesa` and `mesa-utils` packages. The `lib32-mesa` is required for 32 bit applications to use **Mesa**. The `mesa-utils` will be needed for checking that the drivers are working:
 
-       > `sudo pacman -S mesa lib32-mesa mesa-utils`
+         > `sudo pacman -S mesa lib32-mesa mesa-utils`
 
     2. To verify the installation, run:
 
@@ -455,7 +459,7 @@
 29. Install **Vulkan** _userspace driver stack_. Without it apps that need Vulkan won't work at all.
      1. Install the packages:
 
-       > `sudo pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader lib32-vulkan-intel vulkan-tools`
+         > `sudo pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader lib32-vulkan-intel vulkan-tools`
 
     2. To verify that **Vulkan** support is up, run:
 
@@ -466,7 +470,7 @@
 30. Configure video acceleration. I'll use **VA-API**.
      1. For even vaguely modern systems, install `intel-media-driver`. Also install `libva-utils` for checking that it works:
 
-       > `sudo pacman -S intel-media-driver libva-utils`
+         > `sudo pacman -S intel-media-driver libva-utils`
 
     2. To verify that it works, run:
 
@@ -474,7 +478,7 @@
 
        If it prints stuff like this, you're good. If it prints some kind of error, there are issues:
 
-       `` `
+       ```
        Trying display: wayland
 
        Trying display: x11
@@ -521,7 +525,7 @@
 
        > `sudo pacman -S pipewire wireplumber pipewire-pulse pipewire-alsa`
 
-    2. Run this to enable the drivers on every boot and also right now for this user session (it's meant to run in user sessions):
+    2. Run this to enable the drivers on every boot and also right now for this user session:
 
        > `systemctl --user enable --now pipewire.socket pipewire-pulse.socket wireplumber.service`
 
@@ -555,7 +559,7 @@
 
     Configure it so it denies incoming traffic but allows outgoing:
 
-    > `sudo ufw default deny incoming`
+    > `sudo ufw default deny incoming`  
     > `sudo ufw default allow outgoing`
 
     _Allow SSH connections if needed:_
@@ -568,7 +572,7 @@
 
     Now, enable the service and enable the rules:
 
-    > `systemctl enable --now ufw`
+    > `systemctl enable --now ufw`  
     > `sudo ufw enable`
 
     _And finally, if you'll ever want to open up a port later, do this:_
@@ -596,7 +600,7 @@
 
     And apply:
 
-    > `systemctl daemon-reload`
+    > `systemctl daemon-reload`  
     > `systemctl start /dev/zram0`
 
     And check that it works:
@@ -605,16 +609,16 @@
 
 35. For packages that are not in the official package list we'll have to use **yay** to install them easier. So you'll need to install **yay**:
 
-    > `sudo pacman -S --needed git base-devel`
-    > `git clone https://aur.archlinux.org/yay.git`
-    > `cd yay`
+    > `sudo pacman -S --needed git base-devel`  
+    > `git clone https://aur.archlinux.org/yay.git`  
+    > `cd yay`  
     > `makepkg -si`
 
     You may remove the `yay` directory that was created in the process.
 
 ## The next step would be installing and configuring **Hyprland**.
 
-36. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** _portal backend_ so apps get a usable file picker and other dialogs:
+36. Install **Hyprland** - the **Wayland** _compositor_ that provides the graphical session (it’s the thing that actually draws frames and manages windows/input). Add **XWayland** so legacy **X11** apps can still run under **Wayland**. Install **xdg-desktop-portal** (the standard “desktop integration” API on **Wayland**) plus the **Hyprland** _portal backend_ for _compositor_ features like screenshots/screencast/screen sharing, and a **GTK** and **KDE** _portal backends_. KDE one is needed purely for a file picker (GTK provides one, but it doesn't really work at least when this guide was written), the GTK one is needed for all kinds of stuff:
 
     > `sudo pacman -S hyprland xorg-xwayland xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk xdg-desktop-portal-kde`
 
@@ -637,7 +641,7 @@
 
     > `sudo pacman -S ghostty`
 
-39. Install a _file manager_. We'll install a GUI, light-weight **Thunar** (with appropriate thumbnail bakcend):
+39. Install a _file manager_. We'll install a GUI, light-weight **Thunar** (with appropriate thumbnail backend):
 
     > `sudo pacman -S thunar tumbler ffmpegthumbnailer`
 
@@ -660,18 +664,18 @@
 
     > `sudo pacman -S hyprpolkitagent`
 
-    Then open up **Hyprland** config file. Under _AUTOSTART_ section, add the following line:
-
-    > `# authentication agent`
-    > `exec-once = systemctl --user start hyprpolkitagent`
-
+    Then open up **Hyprland** config file. Under _AUTOSTART_ section, add the following:
+      ```
+      # authentication agent
+      exec-once = systemctl --user start hyprpolkitagent
+      ```
 44. Install a _notification daemon_ (Many apps (e.g. Discord) may freeze without one running). We'll install **dunst** - it's lightweight and doesn't actually include a notification center: it shows the notifications and forgets about them. If you really want a notification center, install **swaync** otherwise.
 
     > `sudo pacman -S dunst`
    
-   And paste in `~/.config/hypr/hyprland.conf`:
+      And paste in `~/.config/hypr/hyprland.conf`:
 
-   >`exec-once = dunst`
+      >`exec-once = dunst`
 
 45. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
 
@@ -679,12 +683,12 @@
 
     Add this to Hyprland's config under _AUTOSTART_:
 
-    > `# clipboard`
+    > `# clipboard`  
     > `exec-once = clipse -listen`
 
     And under _KEYBINDINGS_:
 
-    > `# clipboard`
+    > `# clipboard`  
     > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
     > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
 
@@ -716,15 +720,6 @@
 
     Create a config file at `~/.config/hypr/hyprpaper.conf` and paste the contents of `arch-notes/arch_linux_configs/hyprpaper.conf`.
 
-48. Edit the `~/.config/hypr/hyprland.conf` by adding the following section so that X11 apps don't render pixelated:
-
-    ```
-    xwayland {
-       force_zero_scaling = true
-       use_nearest_neighbor = false
-    }
-    ```
-
 49. Install **Hyprlock** and **Hypridle** so that you'll have the lock screen and can auto-sleep, auto-turn-screen-off, etc.
 
     > `sudo pacman -S hyprlock hypridle`
@@ -737,12 +732,12 @@
 
     Then open up the config file for Hyprland and paste under _AUTOSTART_:
 
-    > `# hypridle`
+    > `# hypridle`  
     > `exec-once = hypridle`
 
     And add a manual lock keybind under _KEYBINDINGS_:
 
-    > `# hypridle`
+    > `# hypridle`  
     > `bind = SUPER, L, exec, loginctl lock-session` 
 
 50. Now let's make it so the system boots into a UI _greeter_ that then directly launches Hyprland. We'll use **SDDM**:
@@ -791,7 +786,7 @@
 
     Also, install **Thermald** for better temp / cooling management.
 
-    > `sudo pacman -S thermald`
+    > `sudo pacman -S thermald`  
     > `sudo systemctl enable --now thermald.service`
 
     And finally, make the laptop suspend on lid close:
@@ -808,7 +803,7 @@
 
     Reboot to apply the changes.
 
-53. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tools is missing:
+53. Install the tool that allows you to change the screen brightness. The default shortcuts are already pre-written in the Hyprland's config file. But the tool is missing:
 
     > `sudo pacman -S brightnessctl`
 
@@ -837,11 +832,11 @@
 
 56. VS Code (Microsoft Build):
 
-   > `yay -S visual-studio-code-bin`
+      > `yay -S visual-studio-code-bin`
 
 57. **Nerd** fonts:
-    >`sudo pacman -S ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-emoji`
-   >`fc-cache -r`
+    >`sudo pacman -S ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-emoji`  
+      >`fc-cache -r`
 
 58. Install lowblue mode.
     1. > `sudo pacman -S hyprsunset`
@@ -857,10 +852,10 @@
 
 59. Remap the Caps key to be a modifier and add the shortcuts for Home and End:
 
-    > `sudo pacman -S keyd`
+    > `sudo pacman -S keyd`  
     > `sudo nano /etc/keyd/default.conf`
 
-         ```
+         
          [ids]
          *
 
@@ -872,7 +867,6 @@
          right = end
          C-left = C-home
          C-right = C-end
-         ```
 
     > `sudo systemctl enable --now keyd`
 
@@ -882,7 +876,7 @@
 
     Install Happ:
 
-    > `sudo pacman -U `path/to/the-archive.pkg.tar.zst`
+    > `sudo pacman -U path/to/the-archive.pkg.tar.zst`
 
     And uninstall if need be:
 
@@ -891,7 +885,7 @@
     The default configuration may break DNS resolving so in _Advanced settings_ and choose _TUN mode_ to be **gVisor**.
 61. Add a theme toggle.
       1. Install necessary packages:
-         >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze gnome-themes-extra`
+         >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze gnome-themes-extra`  
          >`yay -S hyprqt6engine`
 
       2. Make Hyprland export **hyprqt6engine** for user services. Put this into `~/.config/hypr/hyprland.conf` near the top:
@@ -917,8 +911,8 @@
          ```
 
       3. Create `~/.local/bin/toggle-theme` file:
-         >`mkdir -p ~/.local/bin`
-         >`touch ~/.local/bin/toggle-theme`
+         >`mkdir -p ~/.local/bin`  
+         >`touch ~/.local/bin/toggle-theme`  
          >`chmod +x ~/.local/bin/toggle-theme`
 
       5. Paste the contents of `arch-notes/arch_linux_configs/toggle-theme-first.sh` into `~/.local/bin/toggle-theme`.
@@ -926,8 +920,9 @@
       6. Bind it in Hyprland. Add this to `~/.config/hypr/hyprland.conf`:
          >`bind = $mainMod SHIFT, T, exec, ~/.local/bin/toggle-theme`
 
-       Reload so that you can use it:
-         >`hyprctl reload`
+       Reload so that you can use it:  
+
+      >`hyprctl reload`
 
 62. Configure Fuzzel to have a dark theme.
       1. Create `~/.config/fuzzel/themes/`.
@@ -961,7 +956,7 @@
       # Wire up fuzzel's theme
       
       if [[ "$is_new_dark" == "true" ]]; then
-         fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini "
+         fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini"
       else
          fuzzel_scheme="~/.config/fuzzel/themes/light.ini"
       fi
@@ -974,7 +969,8 @@
 63. Configure Waybar. 
 
       1. Install the calendar utility: 
-         >`sudo pacman -S gsimplecal`
+         >`sudo pacman -S gsimplecal`  
+
          Put into `~/.config/gsimplecal/config` this:
          ```
          mainwindow_decorated = 0
@@ -989,20 +985,20 @@
          windowrule = match:class ^(gsimplecal)$, float on, move 6 32
          ```
       2. Create 
-         > `~/.config/waybar/config.jsonc`
-         > `~/.config/waybar/style.css`
-         > `~/.config/waybar/scripts/volume.sh`
+         > `~/.config/waybar/config.jsonc`  
+         > `~/.config/waybar/style.css`  
+         > `~/.config/waybar/scripts/volume.sh`  
          
          All the scripts must be made executable with `chmod +x` command. 
 
-        and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
+         and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
 64. Install **zapret**.
       1. `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux`
       2. `sudo bash main_script.sh`
 
-         Включить GameFilter -> n
-         Доступные статегии: ... -> ./general_alt.bat
-         Доступные сетевые интерфейсы: ... -> wlp3s0
+         Включить GameFilter -> n  
+         Доступные статегии: ... -> ./general_alt.bat  
+         Доступные сетевые интерфейсы: ... -> wlp3s0  
       
 
       3. Run the service: `sudo bash service.sh general_alt.bat` (from a random directory: `sudo bash ~/zapret-discord-youtube-linux/service.sh general_alt.bat`)
@@ -1032,7 +1028,7 @@
 
          bind _partial screenshot to clipboard_ to _SUPER+SHIFT+D_;
 
-         bind partial screenshot to file_ to _SUPER+SHIFT+CTRL+D_
+         bind _partial screenshot to file_ to _SUPER+SHIFT+CTRL+D_
 
          by pasting to `~/.config/hypr/hyprland` the following:
          ```
@@ -1052,9 +1048,9 @@
 66. Configure ghostty:
       1. Check out solarized themes:
        
-      >`ghostty +list-themes --plain`
+         >`ghostty +list-themes --plain`
 
-      I'm gonna pick "Builtin Solarized Light" and "Dark Modern". 
+         I'm gonna pick "Builtin Solarized Light" and "Dark Modern". 
 
       2. Create a file at `~/.config/ghostty/themes/default-light.conf`. Paste inside it:
       
@@ -1112,15 +1108,15 @@
 
     Now you can type `Ctrl+T` in a shell and fuzzy search!
       
-68. Configure an Dynamic Equalizer:
-   1. `sudo pacman -S easyeffects lsp-plugins-lv2`
-   2. Launch easyeffects. Export from `arch-notes/arch_linux_installation/dac-pr1-pro-nova.json` the preset. 
-   3. To find your current presets, look for them in `.local/share/easyeffects/output/`
+68. Configure a Dynamic Equalizer:
+      1. `sudo pacman -S easyeffects lsp-plugins-lv2`
+      2. Launch easyeffects. Export from `arch-notes/arch_linux_installation/dac-pr1-pro-nova.json` the preset. 
+      3. To find your current presets, look for them in `.local/share/easyeffects/output/`
 
 69. Configure **dunst** (notification daemon):
       Paste into `~/.config/dunst/dunstrc` the contents of `arch-notes/arch_linux_configs/dunst.conf`.
       Paste into `~/.config/hypr/hyprland.conf` the following (use existing animations{} block if needed):
-      `` `
+      ```
       animations {
          bezier = notifEase, 0.22, 1.00 , 0.36, 1.00
 
@@ -1155,7 +1151,8 @@
       >`sudo pacman -S libreoffice-fresh`
 
    And fonts+spelling:
-      >`sudo pacman -S ttf-liberation ttf-caladea ttf-carlito hunspell hunspell-en_us hunspell-ru`
+
+   >`sudo pacman -S ttf-liberation ttf-caladea ttf-carlito hunspell hunspell-en_us hunspell-ru`
 
    The commands to launch stuff from are:
    
@@ -1173,29 +1170,29 @@
 
 75. Configure an optical character recognition (OCR) tool for extracting text from images.
 
-   1. First, install the necessary tools (you also have to have installed `wl-clipboard grim slurp`):
-      >`pacman -S tesseract`
-   2. Then install the language data packs:
+      1. First, install the necessary tools (you also have to have installed `wl-clipboard grim slurp`):
+         >`pacman -S tesseract`
+      2. Then install the language data packs:
 
-      >`pacman -S tesseract-data-eng tesseract-data-rus tesseract-data-jpn` 
+         >`pacman -S tesseract-data-eng tesseract-data-rus tesseract-data-jpn` 
 
-      You can install other langauge data packs later if you encounter different languages.
+         You can install other langauge data packs later if you encounter different languages.
 
-      You can also run `sudo pacman -S tesseract-data` so pacman will prompt you to pick the packages if you can't remember the language codes.
+         You can also run `sudo pacman -S tesseract-data` so pacman will prompt you to pick the packages if you can't remember the language codes.
 
-      Then we will write a script that prompts you to enter a language code (you can also concatenate them with `+` like `eng+rus`) and then extracts the text.
+         Then we will write a script that prompts you to enter a language code (you can also concatenate them with `+` like `eng+rus`) and then extracts the text.
 
-      Install a dialog spawner: `sudo pacman -S kdialog`.
+         Install a dialog spawner: `sudo pacman -S kdialog`.
 
-      Create a file at `.local/bin/ocr-region`. Make it executable with `chmod +x`. 
+         Create a file at `.local/bin/ocr-region`. Make it executable with `chmod +x`. 
 
-      Paste inside it the contents of `arch-notes/arch_linux_configs/ocr-region.sh`.
+         Paste inside it the contents of `arch-notes/arch_linux_configs/ocr-region.sh`.
 
-      Bind it in `~/.config/hypr/hyprland.conf`:
+         Bind it in `~/.config/hypr/hyprland.conf`:
 
-      `bind = SUPER SHIFT, X, exec, ~/.local/bin/ocr-region`
+         `bind = SUPER SHIFT, X, exec, ~/.local/bin/ocr-region`
 
-      Reload with `hyprctl reload`
+         Reload with `hyprctl reload`
 
 76. Install Discord:
    >`sudo pacman -S discord`

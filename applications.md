@@ -42,3 +42,6 @@ Discord
 Steam
 
 Syncthing
+
+
+μTorrent
