@@ -57,8 +57,10 @@ fi
 
 ln -sf $ghostty_scheme $HOME/.config/ghostty/themes/current.conf
 
-#reload ghostty's config
-pkill -USR2 -x ghostty
+#reload ghostty's config (if ghostty is open)
+if pgrep -x ghostty >/dev/null; then
+  pkill -USR2 -x ghostty
+fi
 
 # Wire up fuzzel's theme
 if [[ "$is_new_dark" == "true" ]]; then

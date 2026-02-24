@@ -1,5 +1,1 @@
-sudo pacman -S gwenview
-
-
-
 

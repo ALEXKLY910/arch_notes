@@ -1,6 +1,7 @@
 If VS Code doesn't use the font, try enforcing it in the config:
 "editor.fontFamily": "JetBrainsMono Nerd Font, Symbols Nerd Font Mono, Symbols Nerd Font, Noto Color Emoji, monospace"
 
+To find out how an app is called inside Hyprland, run `hyprctl clients`
 
 The desktop-entry approach looks like this: copy the app’s .desktop file into ~/.local/share/applications/, then edit its Exec= line to prefix env QT_QPA_PLATFORMTHEME=qt5ct …. That exact trick is a standard way people force a Qt app to use a specific platform theme.
 

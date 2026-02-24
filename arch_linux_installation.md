@@ -1,6 +1,6 @@
 [Official download page]: https://archlinux.org/download/
 
-# Arch Linux installation process, UEFI, no dual-boot, single drive, ext4 root + EFI partition + no swap, 64-bit only, Hyprland. Plus theming and common sowftare. Documented.
+# Arch Linux installation process, UEFI, no dual-boot, single drive, ext4 root + EFI partition + no swap, 64-bit only, Hyprland. Plus theming and common sowftare. Documented. vlc-plugins-all
 
 1.  Go to [Official download page][Official download page], download **.torrent** file for the ISO. And the signature file ending with **.iso.sig**. Open up the **.torrent** file, for example, with **μTorrent**, download the ISO.
 
@@ -22,7 +22,7 @@
        > if ($content -eq "ACTUALL_HASH_FROM_THE_PAGE"){
        > "Match"
        > }
-       > else{
+    vlc-plugins-all    > else{
        > "No match"
        > }
        > ```
@@ -31,7 +31,7 @@
 
        To verify that GnuPG was successfully installed and added to PATH, run:
 
-       > `gpg --version`
+       > `gpg --version` vlc-plugins-all
 
        Then to verify the signature, first ensure that the ISO and the signature file are located in the same directory, then go the the directory where you store the ISO and the signature file, and:
        1. Download the signing key from WKD (needed for verification alongside the signature file):
@@ -58,7 +58,7 @@
 
     ```
 
-3.  Prepare the installation medium. Plug in a USB drive with NO useful data on it (it will be erased). We'll need to partition it and format it to FAT32 using **diskpart** (a Windows tool for manipulating disks and partitions, preinstalled on every relevant Windows version); you will need to run the following commands _as an Administrator_. This will work for UEFI-boots only - which is fine by us since that's what we're gonna be using anyway:
+3.  Prepare the installation medium. Plug in a USB drive with NO useful data on it (it will be erased). We'll need to partition it and format it to FAT32 using **diskpart** (a Windows tool for manipulating disks and partitions, preinstalled on every relevant Windows version); you will need to run the following commands _as an Administrator_. This will work for UEFI-boots only - which is fine by us since that's what we're gon vlc-plugins-allna be using anyway:
     1. Start an interactive shell inside of which we will run all the following commands:
 
        > `diskpart`
@@ -107,7 +107,7 @@
 
     12. When done copying, right click on the DVD drive and select Eject.
 
-4.  Boot the live environment
+4.  vlc-plugins-all Boot the live environment
     1.  Disable the **UEFI Secure boot**, because Arch Linux installation images do not support it:
         - Go to UEFI firmware interface, navigate to Security tab, find Secure boot, disable it. The process may differ from interface to interface, but should be pretty intuitive. Save the changes and exit the interface.
     2.  Open the Boot menu and boot from the USB. When the installation medium's boot menu appears, select _Arch Linux install medium_.
@@ -118,7 +118,7 @@
 7.  Configure network
     1. Ensure your network interface is listed:
 
-       > `ip link`
+    vlc-plugins-all    > `ip link`
 
        You'll see `lo` - ignore it. The stuff to pay attention to is whether there is entries like `enp3s0`, `enp0s25`, `eno1` for Ethernet or `wlp2s0`, `wlan0` for Wi-Fi.
 
@@ -130,7 +130,7 @@
 
        > `rfkill unblock wlan`
 
-       If it is _hard locked_ you have to manually switch some kind of hardware button to unlock it.
+       If it is _hard locked_ you have to manually switch some kind of hardware button to unlock it. vlc-plugins-all
 
     3. Connect to the network. For the Ethernet you have to just plug in the cable. For Wi-Fi use `iwctl` for configuration:
        1. To enter the interactive shell, run (to exit it later, press `Ctrl+d`):
@@ -168,7 +168,7 @@
 9.  Partitioning the disk
     1. When recognized by the live system, physical disks are assigned to _block devices_. For example, _/dev/sda_, _/dev/nvme0n1_, etc. To see such devices, run:
 
-       > `fdisk -l`
+    vlc-plugins-all    > `fdisk -l`
 
        There recognize the _device_ onto which you will be installing Arch linux by its size. The result eiding in `loop` may be ignored.
 
@@ -231,7 +231,7 @@
 
     > `lsblk -f`
 
-11. Mount the file systems
+11. vlc-plugins-all Mount the file systems
     1. Mount the _root partition_ to `/mnt`:
 
        > `mount /dev/root_partition /mnt`
@@ -246,7 +246,7 @@
 
 12. The following command installs a minimal Arch system (base userland, Linux kernel, firmware) into /mnt and copies the pacman keyring so package signature verification works in the new install. It also installs the CPU microcode (for patching some low-level hardware bugs: for Intel it's `intel-ucode`; for AMD it's `amd-ucode`), `networkmanager` and `nano` (the text editor):
 
-    > `pacstrap -K /mnt base linux linux-firmware intel-ucode networkmanager nano`
+    vlc-plugins-all > `pacstrap -K /mnt base linux linux-firmware intel-ucode networkmanager nano`
 
     To check whether it was executed successfully, do this:
     1. Check the exit status. 0 means the pacstrap itself completed without throwing:
@@ -276,7 +276,7 @@
 
        > `ln -sf /usr/share/zoneinfo/Europe/Moscow /etc/localtime`
 
-       To verify that the timezone was set, check the `/etc/localtime` file. It should print the linking: `/etc/localtime -> /usr/share/zoneinfo/Europe/Moscow`:
+    vlc-plugins-all    To verify that the timezone was set, check the `/etc/localtime` file. It should print the linking: `/etc/localtime -> /usr/share/zoneinfo/Europe/Moscow`:
 
        > `ls -l /etc/localtime`
 
@@ -284,7 +284,7 @@
 
        > `hwclock --systohc`
 
-    3. Set the time synchronization using Network Time Protocol so the clock doesn't drift from reality:
+    3. Set the time synchronization using Network Time Protocol so the clock doesn't drift from reality: vlc-plugins-all
 
        > `timedatectl set-ntp true`
 
@@ -306,7 +306,7 @@
 
 19. Set the password for the _root user_, by running the following command and entering your password (have it in mind that when typing in the password it won't be displayed at all, not even under the form of asterisks):
 
-    > `passwd`
+    vlc-plugins-all > `passwd`
 
 20. Configure the boot loader. We'll opt for **GRUB**
     1. Install the `grub` and `efibootmgr` packages:
@@ -323,7 +323,7 @@
 
 ### That should be it. Log in as `root`, enter the password you set before and proceed to further set up you environment. You're inside Arch Linux now, yay!
 
-22. If you want your USB to be back in a working state, you should reformat it. The procedure is pretty much the same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
+22. If you want your USB to be back in a working state, you should reformat it. The procedure is pretty much the vlc-plugins-all same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
     1. Launch **diskpart** shell, by running:
        > `diskpart`
     2. Lists all the disks:
@@ -356,7 +356,7 @@
 
     9. Run this to exit the interactive shell:
 
-       > `exit`
+    vlc-plugins-all    > `exit`
 
 23. Connect to the internet. You can now use a tool provided by the **NetworkManager** called **nmtui**:
     1. Run:
@@ -367,7 +367,7 @@
 
     _P.S. for further network management use this tool_
 
-24. Right now all you're seeing is TTY. But it has an awfully small font. Let's set another one. Actually, the one we used during the Arch installation.
+24. vlc-plugins-all Right now all you're seeing is TTY. But it has an awfully small font. Let's set another one. Actually, the one we used during the Arch installation.
     1. You have to download the font package because it doesn't come preinstalled like it was on the _live system_:
        > `pacman -S terminus-font`
     2. Now you can set the font. Note that this will set the font only for the current session:
@@ -381,7 +381,7 @@
        > `FONT=ter-132b`
 
 25. Let's add a user, because always being root is extremely unsafe. I'll add a new user, call him `alex`. I'll add him to the `wheel` group - a group of users that conventionally gets granted the access to `sudo` - a tool that lets a user run commands with root priviliges.
-    1. First lets create the user and add him to the group. Also, it's worth setting the `login shell` that will be used for this user later, I'll stick with `bash`. `-m` flag creates a `/home/username` directory:
+    vlc-plugins-all 1. First lets create the user and add him to the group. Also, it's worth setting the `login shell` that will be used for this user later, I'll stick with `bash`. `-m` flag creates a `/home/username` directory:
 
        > `useradd -m -G wheel -s /bin/bash alex`
 
@@ -392,7 +392,7 @@
     3. We can double-check that the user has been added by running:
        > `id alex`
 
-26. Once we added the user and added him to the `wheel` group, let's install `sudo` and grant `sudo` access to the `wheel` group:
+26. Once we added the user and added him to the `wheel` group, let's install `sudo` and grant `sudo` access to  vlc-plugins-allthe `wheel` group:
     1. Install `sudo`:
 
        > `pacman -S sudo`
@@ -435,7 +435,7 @@
 ## Mesa, Vulkan and VA-API are for Intel GPUs
 
 28. Install **Mesa** _userspace driver stack_. Without it the system would render graphics using CPU which is ineffective in all the possible ways.
-    1. Install `mesa`, `lib32-mesa` and `mesa-utils` packages. The `lib32-mesa` is required for 32 bit applications to use **Mesa**. The `mesa-utils` will be needed for checking that the drivers are working:
+    vlc-plugins-all 1. Install `mesa`, `lib32-mesa` and `mesa-utils` packages. The `lib32-mesa` is required for 32 bit applications to use **Mesa**. The `mesa-utils` will be needed for checking that the drivers are working:
 
        > `sudo pacman -S mesa lib32-mesa mesa-utils`
 
@@ -453,7 +453,7 @@
        Note though, that it will list `llvmpipe` as the fallback renderer somewhere. It would probably be listed under the last device.
 
 29. Install **Vulkan** _userspace driver stack_. Without it apps that need Vulkan won't work at all.
-    1. Install the packages:
+    vlc-plugins-all 1. Install the packages:
 
        > `sudo pacman -S vulkan-icd-loader vulkan-intel lib32-vulkan-icd-loader lib32-vulkan-intel vulkan-tools`
 
@@ -464,7 +464,7 @@
        Open up the file and look for info about your graphics card. Look for `GPU0` and check out the `deviceName`. It should be the name of your actual GPU.
 
 30. Configure video acceleration. I'll use **VA-API**.
-    1. For even vaguely modern systems, install `intel-media-driver`. Also install `libva-utils` for checking that it works:
+    vlc-plugins-all 1. For even vaguely modern systems, install `intel-media-driver`. Also install `libva-utils` for checking that it works:
 
        > `sudo pacman -S intel-media-driver libva-utils`
 
@@ -474,7 +474,7 @@
 
        If it prints stuff like this, you're good. If it prints some kind of error, there are issues:
 
-       ```
+       `` vlc-plugins-all`
        Trying display: wayland
 
        Trying display: x11
@@ -516,7 +516,7 @@
        VAProfileVP9Profile2 : VAEntrypointVLD
        ```
 
-31. Sound drivers. We'll install the default **PipeWire** stack.
+31. vlc-plugins-all Sound drivers. We'll install the default **PipeWire** stack.
     1. Run this to install:
 
        > `sudo pacman -S pipewire wireplumber pipewire-pulse pipewire-alsa`
@@ -585,7 +585,7 @@
 
 34. Let's configure a RAM swap. Without it if you exceed your RAM capacity the kernel will start killing processes which could result in unsaved work and disrupted workflow. We'll use **zram**:
 
-    > `sudo pacman -S zram-generator`
+    > `sudo pacman -S zram-generator` vlc-plugins-all
 
     Open up a config file at `/etc/systemd/zram-generator.conf` and add the following lines:
 
@@ -637,9 +637,9 @@
 
     > `sudo pacman -S ghostty`
 
-39. Install a _file manager_. We'll install a GUI, light-weight **Thunar**:
+39. Install a _file manager_. We'll install a GUI, light-weight **Thunar** (with appropriate thumbnail bakcend):
 
-    > `sudo pacman -S thunar`
+    > `sudo pacman -S thunar tumbler ffmpegthumbnailer`
 
 40. Install an _app launcher_. We'll install **Fuzzel**:
 
@@ -743,7 +743,7 @@
     And add a manual lock keybind under _KEYBINDINGS_:
 
     > `# hypridle`
-    > `bind = SUPER, L, exec, loginctl lock-session`
+    > `bind = SUPER, L, exec, loginctl lock-session` vlc-plugins-all
 
 50. Now let's make it so the system boots into a UI _greeter_ that then directly launches Hyprland. We'll use **SDDM**:
     1. `sudo pacman -S sddm`. If prompted what provider to choose for _ttf-font_, choose _noto-fonts_.
@@ -812,7 +812,7 @@
 
     > `sudo pacman -S brightnessctl`
 
-54. Let's configure Bluetooth.
+54. vlc-plugins-all Let's configure Bluetooth.
     1. First, install the Bluetooth stack and CLI tools:
 
        > `sudo pacman -S bluez bluez-utils`
@@ -840,7 +840,7 @@
    > `yay -S visual-studio-code-bin`
 
 57. **Nerd** fonts:
-   >`sudo pacman -S ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-emoji`
+    vlc-plugins-all>`sudo pacman -S ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono noto-fonts-emoji`
    >`fc-cache -r`
 
 58. Install lowblue mode.
@@ -889,7 +889,7 @@
     > `pacman -Rns happ`
 
     The default configuration may break DNS resolving so in _Advanced settings_ and choose _TUN mode_ to be **gVisor**.
-61. Add a theme toggle.
+61. A vlc-plugins-alldd a theme toggle.
       1. Install necessary packages:
          >`sudo pacman -S --needed dconf gsettings-desktop-schemas breeze gnome-themes-extra`
          >`yay -S hyprqt6engine`
@@ -926,7 +926,7 @@
       6. Bind it in Hyprland. Add this to `~/.config/hypr/hyprland.conf`:
          >`bind = $mainMod SHIFT, T, exec, ~/.local/bin/toggle-theme`
 
-      Reload so that you can use it:
+      vlc-plugins-all Reload so that you can use it:
          >`hyprctl reload`
 
 62. Configure Fuzzel to have a dark theme.
@@ -961,7 +961,7 @@
       # Wire up fuzzel's theme
       
       if [[ "$is_new_dark" == "true" ]]; then
-         fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini"
+         fuzzel_scheme="~/.config/fuzzel/themes/dracula.ini vlc-plugins-all"
       else
          fuzzel_scheme="~/.config/fuzzel/themes/light.ini"
       fi
@@ -983,7 +983,7 @@
          mainwindow_resizable = 0
          close_on_unfocus = 1
          mainwindow_position = none
-         ```
+      vlc-plugins-all    ```
          Add these rules to `~/.confg/hypr/hyprland.conf`:
          ```
          windowrule = match:class ^(gsimplecal)$, float on, move 6 32
@@ -993,7 +993,7 @@
          > `~/.config/waybar/style.css`
          > `~/.config/waybar/scripts/volume.sh`
          
-         All the scripts must be made executable with `chmod +x` command.
+         All the scripts must be made executable with `chmod +x` command. vlc-plugins-all
 
         and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
 64. Install **zapret**.
@@ -1021,7 +1021,7 @@
          Add this line to `~/.config/hypr/hyprland.conf`:
          `bind = SUPER SHIFT, Z, exec, ~/.local/bin/toggle-zapret`
          And update: `hyprctl reload`
-65. Configure screenshots:
+65. C vlc-plugins-allonfigure screenshots:
       1. Install the tools for screenshotting:
 
          >`sudo pacman -S grim slurp`
@@ -1039,19 +1039,19 @@
          # Fullscreen -> clipboard (SUPER + D)
          bind = SUPER, D, exec, grim - | wl-copy && notify-send "Screenshot" "Fullscreen copied to clipboard"
 
-         # Fullscreen -> file (SUPER + CTRL + D)
-         bind = SUPER CTRL, D, exec, mkdir -p ~/Pictures/Screenshots && grim ~/Pictures/Screenshots/shot-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Fullscreen saved to Pictures/Screenshots"
+         # Fullscreen -> file (SUPER + CAPS + D)
+         bind = SUPER CTRL, D, exec, mkdir -p ~/Images/Screenshots && grim ~/Images/Screenshots/shot-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Fullscreen saved to Images/Screenshots"
 
          # Partial -> clipboard (SUPER + SHIFT + D)
-         bind = SUPER SHIFT, D, exec, grim -g "$(slurp)" - | wl-copy && notify-send "Screenshot" "Selection copied to clipboard"
+         bind = SUPER SHIFT, D, exec, bash -lc 'set -euo pipefail; region="$(slurp)"; grim -g "$region" - | wl-copy; notify-send "Screenshot" "Selection copied to clipboard"'
 
-         # Partial -> file (SUPER + SHIFT + CTRL + D)
-         bind = SUPER SHIFT CTRL, D, exec, mkdir -p ~/Pictures/Screenshots && grim -g "$(slurp)" ~/Pictures/Screenshots/area-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Selection saved to Pictures/Screenshots"
+         # Partial -> file (SUPER + SHIFT + CAPS + D)
+         bind = SUPER SHIFT CTRL, D, exec, bash -lc 'set -euo pipefail; mkdir -p ~/Images/Screenshots; region="$(slurp)"; grim -g "$region" ~/Images/Screenshots/area-$(date +'%F_%H-%M-%S').png; notify-send "Screenshot" "Selection saved to Images/Screenshots"'
          ```
 
 66. Configure ghostty:
       1. Check out solarized themes:
-      
+      vlc-plugins-all 
       >`ghostty +list-themes --plain`
 
       I'm gonna pick "Builtin Solarized Light" and "Dark Modern". 
@@ -1070,7 +1070,7 @@
 
       >`ln -sf ~/.config/ghostty/themes/default-light.conf ~/.config/ghostty/themes/current.conf`
 
-      5. Create a file at `~/.config/ghostty/config` and paste inside it:
+      5. Create a file a vlc-plugins-allt `~/.config/ghostty/config` and paste inside it:
       ```
       config-file = themes/current.conf
 
@@ -1084,7 +1084,7 @@
       #Wire up ghostty's theme
 
       if [[ "$is_new_dark" == "true" ]]; then
-         ghostty_scheme="$HOME/.config/ghostty/themes/default-dark.conf"
+         ghostty_scheme="$HOME/.config/ghostty/themes/default-dark.conf vlc-plugins-all"
       else
          ghostty_scheme="$HOME/.config/ghostty/themes/default-light.conf"
       fi
@@ -1094,7 +1094,7 @@
       ln -sf $ghostty_scheme $HOME/.config/ghostty/themes/current.conf
 
       #reload ghostty's config
-      pkill -USR2 -x ghostty
+      pkill -USR2 -x ghostty vlc-plugins-all
 
       ```
 67. Configure fuzzy search across your filesystem:
@@ -1108,7 +1108,7 @@
     ```
 
     Then reload:
-    > `source ~/.bashrc`
+    > `source ~/.bashrc` vlc-plugins-all
 
     Now you can type `Ctrl+T` in a shell and fuzzy search!
       
@@ -1120,9 +1120,9 @@
 69. Configure **dunst** (notification daemon):
       Paste into `~/.config/dunst/dunstrc` the contents of `arch-notes/arch_linux_configs/dunst.conf`.
       Paste into `~/.config/hypr/hyprland.conf` the following (use existing animations{} block if needed):
-      ```
-      animations{
-         bezier = notifEase, 0.22, 1.00, 0.36, 1.00
+      `` vlc-plugins-all`
+      animations vlc-plugins-all{
+         bezier = notifEase, 0.22, 1.00 vlc-plugins-all, 0.36, 1.00
 
          animation = layersIn,       1, 3.5, notifEase, slide top
          animation = layersOut,      1, 2.6, notifEase, slide top
@@ -1137,4 +1137,85 @@
 70. Download a simple text editor:
 
    >`sudo pacman -S kwrite`
+
+71. Install an image viewer/editor (Gwenview):
+   >`sudo pacman -S gwenview`
+
+   (to open full screen mode, press CTRL+SHIFT+F)
+
+72. Install a media player (VLC):
+      >`sudo pacman -S vlc vlc-plugins-all`
+   
+   Increase its interface size:
+   >`cp /usr/share/applications/vlc.desktop ~/.local/share/applications/`
+
+   Edit `~/.local/share/applications/vlc.desktop` by modifiying `Exec=` entry with `env QT_SCALE_FACTOR=2`
+
+73. Install Libre Office suite:
+      >`sudo pacman -S libreoffice-fresh`
+
+   And fonts+spelling:
+      >`sudo pacman -S ttf-liberation ttf-caladea ttf-carlito hunspell hunspell-en_us hunspell-ru`
+
+   The commands to launch stuff from are:
+   
+   `lowriter` for Writer (analogue for Word)
+
+   `localc` for Calc (analogue for Excel)
+
+   `loimpress` for Impress (analogue for PowerPoint)
+
+74. Install an archiving plugin for thunar and an archiver GUI Ark along with packages for unarchiving .zip .7z .rar and archiving .zip .7z:
+
+   > `sudo pacman -S thunar-archive-plugin ark unzip zip p7zip unrar`
+
+   Restart Thunar so that it picks up on the new plugin: `thunar -q`
+
+75. Configure an optical character recognition (OCR) tool for extracting text from images.
+
+   1. First, install the necessary tools (you also have to have installed `wl-clipboard grim slurp`):
+      >`pacman -S tesseract`
+   2. Then install the language data packs:
+
+      >`pacman -S tesseract-data-eng tesseract-data-rus tesseract-data-jpn` 
+
+      You can install other langauge data packs later if you encounter different languages.
+
+      You can also run `sudo pacman -S tesseract-data` so pacman will prompt you to pick the packages if you can't remember the language codes.
+
+      Then we will write a script that prompts you to enter a language code (you can also concatenate them with `+` like `eng+rus`) and then extracts the text.
+
+      Install a dialog spawner: `sudo pacman -S kdialog`.
+
+      Create a file at `.local/bin/ocr-region`. Make it executable with `chmod +x`. 
+
+      Paste inside it the contents of `arch-notes/arch_linux_configs/ocr-region.sh`.
+
+      Bind it in `~/.config/hypr/hyprland.conf`:
+
+      `bind = SUPER SHIFT, X, exec, ~/.local/bin/ocr-region`
+
+      Reload with `hyprctl reload`
+
+76. Install Discord:
+   >`sudo pacman -S discord`
+
+78. Install Steam:
+   >`sudo pacman -S steam`
+
+79. Install synchronization tool: **Syncthing**.
+
+   >`sudo pacman -S syncthing`
+
+   >`systemctl --user enable --now syncthing.service`
+
+   You use the service in a browser by typing this URL:
+
+   `http://127.0.0.1:8384`
+
+   Turn on versioning (staggered).
+
+   You can modify .stignore to include stuff you don't want to sync.
+
+   If you hit a limit of files uploaded at once, modify `/etc/sysctl.d/99-inotify.conf` by adding `fs.inotify.max_user_watches=524288`. And running `sud sysctl --system`.
 
