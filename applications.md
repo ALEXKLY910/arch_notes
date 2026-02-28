@@ -45,3 +45,9 @@ Syncthing
 
 
 μTorrent
+
+WizTree
+
+mp3tag
+
+KMSAuto (for Windows)
