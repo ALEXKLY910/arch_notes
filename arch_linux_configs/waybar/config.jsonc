@@ -69,13 +69,15 @@
 "custom/br": {
   "interval": 1,
   "exec": "bash -lc '\nif command -v brightnessctl >/dev/null 2>&1; then\n  cur=$(brightnessctl g)\n  max=$(brightnessctl m)\n  pct=$(( cur * 100 / max ))\n  printf \"󰃠 %s%%\\n\" \"$pct\"\nelse\n  printf \"󰃠 ?%%\\n\"\nfi\n'",
-  "on-scroll-up": "bash -lc 'command -v brightnessctl >/dev/null 2>&1 && brightnessctl set +1% >/dev/null'",
-  "on-scroll-down": "bash -lc 'command -v brightnessctl >/dev/null 2>&1 && brightnessctl set 1%- >/dev/null'",
+  "on-scroll-up":   "bash -lc 'brightnessctl -n68 set 1%+ >/dev/null'",
+  "on-scroll-down": "bash -lc 'brightnessctl -n68 set 1%-  >/dev/null'",
   "cursor": 60
 },
 
   "backlight/slider": {
-    "orientation": "horizontal"
+    "orientation": "horizontal",
+    "min": 1,
+    "max": 100
   },
 
   "battery": {
