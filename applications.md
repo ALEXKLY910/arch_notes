@@ -2,7 +2,7 @@ Terminal Emulator (ghostty)
 
 App launcher (fuzzel)
 
-Clipboard Manager (clipse)
+Clipboard Manager (copyq)
 
 Monitor / screen brightness (Monitorian for Windows)
 

@@ -36,11 +36,15 @@ if [[ "$is_new_dark" == "true" ]]; then
   gtk_theme="Adwaita-dark"
   qt_icon_theme="breeze-dark"
   qt_scheme="/usr/share/color-schemes/BreezeDark.colors"
+  copyq_theme="black.ini"
 else
   gtk_theme="Adwaita"
   qt_icon_theme="breeze"
   qt_scheme="/usr/share/color-schemes/BreezeLight.colors"
+  copyq_theme="simple.ini"
 fi
+
+copyq eval "loadTheme(info('themes') + '/$copyq_theme')"
 
 [[ -f "$qt_scheme" ]] \
   || { echo "Missing Qt color scheme file: $qt_scheme (install 'breeze')" >&2; exit 1; }

@@ -677,22 +677,19 @@
 
       >`exec-once = dunst`
 
-45. Install a _clipboard_. We'll install **clipse** - it features the clipboard history overlay window.
+45. Install a _clipboard_. We'll install **CopyQ** - it features the clipboard history overlay window.
 
-    > `yay -S clipse`
+   >`sudo pacman -S copyq`
 
     Add this to Hyprland's config under _AUTOSTART_:
 
     > `# clipboard`  
-    > `exec-once = clipse -listen`
-
+    > `exec-once = copyq --start-server`
+    
     And under _KEYBINDINGS_:
 
     > `# clipboard`  
-    > `bind = $mainMod SHIFT, V, exec, ghostty --class=app.clipse -e clipse`
-    > `windowrule = match:class ^app\.clipse$, float on, size 622 652`
-
-    Open up its config file at `.config/clipse/config.json` and edit "maxHistory":500 and "maxEntryLength": 300 and "pollInterval": 150.
+    > `bind = SUPER, V, exec, copyq toggle`
 
     Also, install `wl-clipboard`, it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 
