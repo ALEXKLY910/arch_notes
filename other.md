@@ -6,4 +6,6 @@ sudo pacman -S baobab
 
 sudo pacman -S less
 
-sudo pacman -S copyq
+sudo pacman -S --needed wimlib rsync dosfstools 
+
+sudo pacman -S sgdisk

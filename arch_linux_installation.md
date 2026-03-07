@@ -327,7 +327,7 @@
 
 ### That should be it. Log in as `root`, enter the password you set before and proceed to further set up you environment. You're inside Arch Linux now, yay!
 
-22. If you want your USB to be back in a working state, you should reformat it. The procedure is pretty much the  same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
+22. If you want your USB to be back in the working state, you should reformat it. The procedure is pretty much the  same. We'll format it back to exFAT - the most compatible and not crippled filesystem - great for all-purpose USBs. We'll be using **diskpart** again (in Windows, of course). So, be careful not to reformat the wrong device accidentally.
     1. Launch **diskpart** shell, by running:
        > `diskpart`
     2. Lists all the disks:
