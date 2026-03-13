@@ -9,3 +9,4 @@ sudo pacman -S less
 sudo pacman -S --needed wimlib rsync dosfstools 
 
 sudo pacman -S sgdisk
+

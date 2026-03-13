@@ -1106,9 +1106,11 @@
     Now you can type `Ctrl+T` in a shell and fuzzy search!
       
 68. Configure a Dynamic Equalizer:
-      1. `sudo pacman -S easyeffects lsp-plugins-lv2`
-      2. Launch easyeffects. Export from `arch-notes/arch_linux_installation/dac-pr1-pro-nova.json` the preset. 
-      3. To find your current presets, look for them in `.local/share/easyeffects/output/`
+      reference nova.md
+
+68. Configure Dynamic Equalizer (the Nova plugin). NDR Nova is the Windows plugin, Wine helps Windows plugins run inside Linux, yabridge exposes the plugin like a Linux plugin, Carla is the host that actually routes through the plugin.
+      1. `sudo pacman -S wine-staging yabridge yabridgectl carla pipewire-jack qpwgraph`
+
 
 69. Configure **dunst** (notification daemon):
       Paste into `~/.config/dunst/dunstrc` the contents of `arch-notes/arch_linux_configs/dunst.conf`.
