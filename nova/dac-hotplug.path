@@ -1,0 +1,10 @@
+; ~/.config/systemd/user/dac-hotplug.path
+
+[Unit]
+Description=Watch /dev/snd/by-id for audio hotplug
+
+[Path]
+PathChanged=/dev/snd/by-id
+
+[Install]
+WantedBy=default.target

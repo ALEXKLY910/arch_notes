@@ -1,0 +1,12 @@
+; ~/.config/systemd/user/qpwgraph.service
+
+[Unit]
+Description=Qpwgraph (Nova patchbay)
+After=pipewire.service wireplumber.service
+
+[Service]
+ExecStart=/usr/bin/qpwgraph --exclusive --minimized %h/.config/qpwgraph/nova-active.qpwgraph
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

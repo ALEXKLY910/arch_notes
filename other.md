@@ -10,3 +10,4 @@ sudo pacman -S --needed wimlib rsync dosfstools
 
 sudo pacman -S sgdisk
 
+sudo pacman -S --needed lsp-plugins-lv2

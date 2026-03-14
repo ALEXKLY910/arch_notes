@@ -1,0 +1,8 @@
+; ~/.config/systemd/user/dac-hotplug.service
+
+[Unit]
+Description=Switch qpwgraph patchbay based on DAC presence
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/qpwgraph-select-audio

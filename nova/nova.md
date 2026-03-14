@@ -19,19 +19,20 @@ yabridgectl add "$HOME/.wine-tdr/drive_c/Program Files/Common Files/VST3"
 
 yabridgectl sync
 
-Open carla from the terminal. Open its settings and add ~/.vst3 into the plugin paths.
-
-Click Add Plugin and then Refresh
-
 sudo pacman -S --needed realtime-privileges
 sudo gpasswd -a "$USER" realtime
 reboot
+
+Open carla from the terminal. Open its settings and add ~/.vst3 into the plugin paths.
+
+Settings → Configure Carla → Engine → Process mode → “Continuous Rack”.
 
 Add TDR Nova plugin.
 
 Open it.
 
 Configure it.
+
 
 pactl load-module module-null-sink sink_name=nova_fx sink_properties=device.description=NovaFX
 
@@ -44,11 +45,16 @@ Connect NovaFX monitor_FR -> TDR Nova input_2
 Connect TDR Nova output_1 -> your real device playback_FL
 
 Connect TDR Nova output_2 -> your real device playback_FR
+Make it exclusive
 
-In qpwgraph save the current graph to ~/.config/qpwgraph/nova.qpwgraph
+In qpwgraph save the current graph to ~/.config/qpwgraph/nova-dac.qpwgraph
 
-Add this to autostart:
-qpwgraph --activated --minimized ~/.config/qpwgraph/nova.qpwgraph
+
+Then reconnect TDR Nova outputs to Built-in audio analog stereo and save it to 
+~/.config/qpwgraph/nova-builtin.qpwgraph
+Make it exclusive
+
+
 
 Put this: 
 '''
@@ -69,3 +75,7 @@ Save the carla project into ~/.config/carla/nova.carxp
 Add this to autostart:
 windowrule = workspace 9 silent, match:class ^(carla)$
 exec-once = carla ~/.config/carla/nova.carxp
+
+sudo pacman -S --needed pavucontrol
+
+In pavucontrol check out output devices, make sure that NovaFX is at 100% and you change the actual output devices' volume. 
