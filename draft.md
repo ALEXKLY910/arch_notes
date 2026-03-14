@@ -27,7 +27,16 @@ bindel = SHIFT, XF86AudioLowerVolume, exec, ~/.local/bin/audio-volume down 1%
 
 bindel = , XF86AudioMute, exec, ~/.local/bin/audio-volume mute
 
+Create volume-status.sh under waybar/scripts
+Replace waybar's config.jsonc with the contents of config-nova.jsonc
 
 
 # Update hyprland-current.conf in the docs
+
+
+
+
+
+
+
 
