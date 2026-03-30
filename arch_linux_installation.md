@@ -1052,7 +1052,7 @@
       2. Create a file at `~/.config/ghostty/themes/default-light.conf`. Paste inside it:
       
       ```
-      theme="Builtin Solarized Light"
+      theme="Monokai Pro Light Sun"
       ```
       3. Create a file at `~/.config/ghostty/themes/default-dark.conf`. Paste inside it:
       
