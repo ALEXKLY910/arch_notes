@@ -11,6 +11,7 @@
     "clock"
   ],
   "modules-right": [
+    "hyprland/workspaces",
     "group/audio",
     "group/brightness",
     "battery",
@@ -22,6 +23,14 @@
     "format": "{:%H:%M %d.%m}",
     "tooltip-format": "{:%A, %d %B %Y}",
     "on-click": "gsimplecal"
+  },
+
+  "hyprland/workspaces": {
+    "active-only": true,
+    "all-outputs": false,
+    "format": "{id}",
+    "sort-by": "id",
+    "disable-scroll": true
   },
 
   "group/audio": {
