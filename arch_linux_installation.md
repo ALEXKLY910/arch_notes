@@ -691,9 +691,13 @@
     > `# clipboard`  
     > `bind = SUPER, V, exec, copyq toggle`
 
+    Run the keybinding, go to CopyQ's "Preferences", to the "Tabs" tab and disable "Save Items"
+
     Also, install `wl-clipboard`, it will be useful later. It's a tiny CLI clipboard thing. Gives you two commands: `wl-copy` and `wl-paste` that can write to a clipboard from _stdin_ and write to _stdout_ clipboard's contents.
 
     > `sudo pacman -S wl-clipboard`
+
+    
 
 46. Install a _status bar / shell_. We'll install the most popular one - **Waybar**.
 
