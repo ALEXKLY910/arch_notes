@@ -990,9 +990,14 @@
          > `~/.config/waybar/style.css`  
          > `~/.config/waybar/scripts/volume.sh`  
          
-         All the scripts must be made executable with `chmod +x` command. 
+         All the scripts must be made executable with `chmod +x` command. `
 
-         and paste the contents under `arch-notes/arch_linux_configs/waybar/` accordingly.
+         Paste the contents from these files into the files above in accordingly:
+
+         >`arch_linux_configs/waybar/normal/config-normal.jsonc`
+         >`arch_linux_configs/waybar/normal/volume.sh`
+         >`arch_linux_configs/waybar/style.css`
+         
 64. Install **zapret**.
       1. `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux`
       2. `sudo bash main_script.sh`
@@ -1111,10 +1116,6 @@
       
 68. Configure a Dynamic Equalizer:
       reference nova.md
-
-68. Configure Dynamic Equalizer (the Nova plugin). NDR Nova is the Windows plugin, Wine helps Windows plugins run inside Linux, yabridge exposes the plugin like a Linux plugin, Carla is the host that actually routes through the plugin.
-      1. `sudo pacman -S wine-staging yabridge yabridgectl carla pipewire-jack qpwgraph`
-
 
 69. Configure **dunst** (notification daemon):
       Paste into `~/.config/dunst/dunstrc` the contents of `arch-notes/arch_linux_configs/dunst.conf`.

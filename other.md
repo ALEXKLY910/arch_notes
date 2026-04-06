@@ -20,3 +20,6 @@ sudo pacman -S --needed lsp-plugins-lv2
 sudo pacman -S --needed realtime-privileges
 sudo gpasswd -a "$USER" realtime
 reboot
+
+<!-- system monitoring aka task manager tool -->
+sudo pacman -S mission-center
