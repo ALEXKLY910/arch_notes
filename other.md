@@ -23,3 +23,6 @@ reboot
 
 <!-- system monitoring aka task manager tool -->
 sudo pacman -S mission-center
+
+<!-- volume control -->
+sudo pacman -S pavucontrol
