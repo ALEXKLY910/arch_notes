@@ -88,9 +88,10 @@ case "$ACTION" in
       sleep 2
     fi
 
+
     "$HOME/.local/bin/qpwgraph-select-audio" || true
     systemctl --user start dac-hotplug.path
-    
+
     printf 'nova\n' > "$STATE"
     hyprctl reload
     restart_waybar

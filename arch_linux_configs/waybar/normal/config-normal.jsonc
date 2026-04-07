@@ -33,32 +33,19 @@
     "disable-scroll": true
   },
 
-  "group/audio": {
+"group/audio": {
   "orientation": "horizontal",
-  "drawer": {
-    "click-to-reveal": true,
-    "transition-duration": 180,
-    "transition-left-to-right": true
-  },
   "modules": [
-    "custom/vol",
-    "pulseaudio/slider",
-    "custom/mute"
+    "custom/vol"
   ]
 },
 
 "custom/vol": {
   "interval": 1,
   "exec": "~/.config/waybar/scripts/volume.sh",
+  "on-click": "~/.config/waybar/scripts/volume.sh mute",
   "on-scroll-up": "~/.config/waybar/scripts/volume.sh up",
   "on-scroll-down": "~/.config/waybar/scripts/volume.sh down",
-  "cursor": 60
-},
-
-"custom/mute": {
-  "format": "󰝟",
-  "tooltip": false,
-  "on-click": "~/.config/waybar/scripts/volume.sh mute",
   "cursor": 60
 },
 
