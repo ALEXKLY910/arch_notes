@@ -38,8 +38,8 @@ We are going to set up two audio modes: **Normal mode** and **Nova mode**. We wi
     >`pactl load-module module-null-sink sink_name=nova_fx sink_properties=device.description=NovaFX`
     >`pactl set-default-sink nova_fx`
 11. Build the qpwgraph patchbay for both output cases. Open qpwgraph and make two saved graphs.
-        1. DAC graph: connect NovaFX output to TDR Nova input and TDR Nova output to DAC device. Mark it EXCLUSIVE and save it as `~/.config/qpwgraph/nova-dac.qpwgraph`
-        2. Builtin graph: connect NovaFX output to TDR Nova input and TDR Nova putput to built-in audio device. Mark it EXCLUSIVE and save it as `~/.config/qpwgraph/nova-builtin.qpwgraph`.
+        1. DAC graph: connect NovaFX output to Carla input and Carla output to DAC device. Mark it EXCLUSIVE and save it as `~/.config/qpwgraph/nova-dac.qpwgraph`
+        2. Builtin graph: connect NovaFX output to Carla input and Carla putput to built-in audio device. Mark it EXCLUSIVE and save it as `~/.config/qpwgraph/nova-builtin.qpwgraph`.
 
 12. Rename your current old Waybar config once: 
     `mv ~/.config/waybar/config.jsonc ~/.config/waybar/config-normal.jsonc`.
@@ -92,4 +92,27 @@ We are going to set up two audio modes: **Normal mode** and **Nova mode**. We wi
     4. Create the symlink:
         >`ln -sfn ~/.config/hypr/conf/audio-normal.conf ~/.config/hypr/conf/audio-active.conf`
 
-18. Create the mode-switch script at `~/.local/bin/audio-mode`. Reference `nova/audio-mode.sh`
+18. Create the mode-switch script at `~/.local/bin/audio-mode`. Reference `nova/audio-mode.sh`.
+
+19. Update hyprland.conf:
+    Add this:
+        '''
+        source = ~/.config/hypr/conf/audio-active.conf
+
+        bind = $mainMod SHIFT, E, exec, ~/.local/bin/audio-mode toggle
+        exec-once = ~/.local/bin/audio-mode auto
+
+        windowrule = workspace 9 silent, match:class ^(carla)$
+        '''
+
+    Delete these lines:
+        '''
+        bindel = ,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+
+        bindel = ,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+        bindel = SHIFT,XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 1%+
+        bindel = SHIFT,XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-
+        bindel = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+
+        bindel = ,XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+        '''
+
