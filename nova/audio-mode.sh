@@ -35,6 +35,30 @@ move_all_inputs() {
   done
 }
 
+sink_id_by_name() {
+  pactl list short sinks | awk -v name="$1" '$2 == name {print $1; exit}'
+}
+
+move_inputs_from_sink() {
+  local src_name="$1" dst_name="$2" src_id
+  src_id="$(sink_id_by_name "$src_name")"
+  [[ -n "$src_id" ]] || return 0
+
+  pactl list short sink-inputs | awk -v sid="$src_id" '$2 == sid {print $1}' | while read -r input_id; do
+    pactl move-sink-input "$input_id" "$dst_name" || true
+  done
+}
+
+stop_proc() {
+  local name="$1"
+  pkill -x "$name" || true
+  for _ in {1..30}; do
+    pgrep -x "$name" >/dev/null || return 0
+    sleep 0.1
+  done
+  return 0
+}
+
 ensure_nova_sink() {
   if ! pactl list short sinks | awk '{print $2}' | grep -qx "$NOVA_SINK"; then
     pactl load-module module-null-sink \
@@ -44,12 +68,6 @@ ensure_nova_sink() {
   fi
   pactl set-sink-volume "$NOVA_SINK" 100% || true
   pactl set-sink-mute "$NOVA_SINK" 0 || true
-}
-
-remove_nova_sink() {
-  pactl list short modules | awk '/module-null-sink/ && /sink_name=nova_fx/ {print $1}' | while read -r id; do
-    pactl unload-module "$id" || true
-  done
 }
 
 notify_mode() {
@@ -80,41 +98,60 @@ case "$ACTION" in
     ln -sfn "$HYPR/audio-nova.conf" "$HYPR/audio-active.conf"
 
     ensure_nova_sink
-    pactl set-default-sink "$NOVA_SINK"
-    move_all_inputs "$NOVA_SINK"
 
     if ! pgrep -x carla >/dev/null; then
       hyprctl dispatch exec "carla $CARLA_PROJECT"
       sleep 2
     fi
 
-
     "$HOME/.local/bin/qpwgraph-select-audio" || true
     systemctl --user start dac-hotplug.path
+
+    # Move only after the Nova path exists
+    sleep 0.5
+    pactl set-default-sink "$NOVA_SINK"
+    move_all_inputs "$NOVA_SINK"
+    sleep 0.3
+    move_all_inputs "$NOVA_SINK"
 
     printf 'nova\n' > "$STATE"
     hyprctl reload
     restart_waybar
     notify_mode "Nova mode enabled"
     ;;
+
   normal)
     ln -sfn "$WB/config-normal.jsonc" "$WB/config.jsonc"
     ln -sfn "$HYPR/audio-normal.conf" "$HYPR/audio-active.conf"
 
-    systemctl --user stop dac-hotplug.path qpwgraph.service || true
-
     REAL_SINK="$(real_sink)"
-    pactl set-default-sink "$REAL_SINK"
-    move_all_inputs "$REAL_SINK"
 
-    pkill -x carla || true
-    remove_nova_sink
+    # Kill everything that can keep enforcing the Nova graph
+    systemctl --user stop dac-hotplug.path qpwgraph.service || true
+    stop_proc qpwgraph
+    stop_proc carla
+    sleep 0.5
+
+    # Make hardware default again
+    pactl set-default-sink "$REAL_SINK"
+
+    # Explicitly move anything still stuck on nova_fx
+    for _ in {1..6}; do
+      move_inputs_from_sink "$NOVA_SINK" "$REAL_SINK"
+      sleep 0.2
+    done
+
+    # Then sweep any remaining sink-inputs to the real sink
+    move_all_inputs "$REAL_SINK"
+    sleep 0.2
+    move_all_inputs "$REAL_SINK"
 
     printf 'normal\n' > "$STATE"
     hyprctl reload
     restart_waybar
     notify_mode "Normal mode enabled"
     ;;
+
   *)
     echo "Usage: audio-mode {toggle|nova|normal|auto}"
     exit 1

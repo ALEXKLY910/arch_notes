@@ -1208,7 +1208,12 @@
 
    >`sudo pacman -S syncthing`
 
-   >`systemctl --user enable --now syncthing.service`
+   1. If you want to enable the service run this:
+      >`systemctl --user enable --now syncthing.service`
+   2. If you want to toggle the service by a keybind and make it so it won't autostart, reference and tie the script: `arch_linux_configs/toggle-syncthing.sh`
+
+   Create it at `~/.local/bin/toggle-syncthing`. Make it executable. Tie it to SUPER+SHIFT+Y in hyprland.conf:
+   `bind = $mainMod SHIFT, Y, exec, ~/.local/bin/toggle-syncthing`
 
    You use the service in a browser by typing this URL:
 
@@ -1219,4 +1224,5 @@
    You can modify .stignore to include stuff you don't want to sync.
 
    If you hit a limit of files uploaded at once, modify `/etc/sysctl.d/99-inotify.conf` by adding `fs.inotify.max_user_watches=524288`. And running `sud sysctl --system`.
+
 
