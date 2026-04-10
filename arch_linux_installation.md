@@ -645,6 +645,9 @@
 
     > `sudo pacman -S thunar tumbler ffmpegthumbnailer`
 
+    Also add TerminalEmulator to the helpers file for xfce4 so that thunar will be able to launch the terminal.
+    >`printf 'TerminalEmulator=ghostty\n' > ~/.config/xfce4/helpers.rc`
+
 40. Install an _app launcher_. We'll install **Fuzzel**:
 
     > `sudo pacman -S fuzzel`
@@ -1072,7 +1075,7 @@
 
       >`ln -sf ~/.config/ghostty/themes/default-light.conf ~/.config/ghostty/themes/current.conf`
 
-      5. Create a file a t `~/.config/ghostty/config` and paste inside it:
+      5. Create a file at `~/.config/ghostty/config` and paste inside it:
       ```
       config-file = themes/current.conf
 
@@ -1080,6 +1083,7 @@
       minimum-contrast = 2
 
       font-size=14
+      working-directory=inherit
       ```
       6. Paste this to our toggle script beneath the `is_new_dark` variable declaration:
       ```
