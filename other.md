@@ -26,3 +26,8 @@ sudo pacman -S mission-center
 
 <!-- volume control -->
 sudo pacman -S pavucontrol
+
+<!-- docker -->
+sudo pacman -S docker docker-buildx docker-compose
+sudo systemctl start docker
+sudo usermod -aG docker $USER

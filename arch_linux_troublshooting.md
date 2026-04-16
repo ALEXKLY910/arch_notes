@@ -14,6 +14,10 @@ Maybe consider configuring `XDG user dirs` if home directory folders like Downlo
 
 If when installing a package with pacman you encounter an error like that: failed retrieving file 'filename' from mirror-name.com : The requested URL returned error: 404. It's worth updating pacman's package database: `sudo pacman -Syyu`
 
+Update pacman packages: `sudo pacman -Syu`
+Update aur packages: `yay -Sua`
+Update a specific aur package: `yay -Syu google-chrome`
+
 If you really have to install .rpm package in Arch linux:
 
 ````
