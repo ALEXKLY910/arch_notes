@@ -1048,28 +1048,28 @@
 
        > `sudo pacman -S grim slurp`
 
-    2. Bind _fullscreen screenshot to clipboard_ to _SUPER+D_;
+    2. Bind _fullscreen screenshot to clipboard_ to _SUPER+S_;
 
-       bind _fullscreen screenshot to file_ to _SUPER+CTRL+D_;
+       bind _fullscreen screenshot to file_ to _SUPER+CTRL+S_;
 
-       bind _partial screenshot to clipboard_ to _SUPER+SHIFT+D_;
+       bind _partial screenshot to clipboard_ to _SUPER+SHIFT+S_;
 
-       bind _partial screenshot to file_ to _SUPER+SHIFT+CTRL+D_
+       bind _partial screenshot to file_ to _SUPER+SHIFT+CTRL+S_
 
        by pasting to `~/.config/hypr/hyprland` the following:
 
        ```
-       # Fullscreen -> clipboard (SUPER + D)
-       bind = SUPER, D, exec, grim - | wl-copy && notify-send "Screenshot" "Fullscreen copied to clipboard"
+       # Fullscreen -> clipboard (SUPER + S)
+       bind = SUPER, S, exec, grim - | wl-copy && notify-send "Screenshot" "Fullscreen copied to clipboard"
 
-       # Fullscreen -> file (SUPER + CAPS + D)
-       bind = SUPER CTRL, D, exec, mkdir -p ~/Images/Screenshots && grim ~/Images/Screenshots/shot-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Fullscreen saved to Images/Screenshots"
+       # Fullscreen -> file (SUPER + CAPS + S)
+       bind = SUPER CTRL, S, exec, mkdir -p ~/Images/Screenshots && grim ~/Images/Screenshots/shot-$(date +'%F_%H-%M-%S').png && notify-send "Screenshot" "Fullscreen saved to Images/Screenshots"
 
-       # Partial -> clipboard (SUPER + SHIFT + D)
-       bind = SUPER SHIFT, D, exec, bash -lc 'set -euo pipefail; region="$(slurp)"; grim -g "$region" - | wl-copy; notify-send "Screenshot" "Selection copied to clipboard"'
+       # Partial -> clipboard (SUPER + SHIFT + S)
+       bind = SUPER SHIFT, S, exec, bash -lc 'set -euo pipefail; region="$(slurp)"; grim -g "$region" - | wl-copy; notify-send "Screenshot" "Selection copied to clipboard"'
 
-       # Partial -> file (SUPER + SHIFT + CAPS + D)
-       bind = SUPER SHIFT CTRL, D, exec, bash -lc 'set -euo pipefail; mkdir -p ~/Images/Screenshots; region="$(slurp)"; grim -g "$region" ~/Images/Screenshots/area-$(date +'%F_%H-%M-%S').png; notify-send "Screenshot" "Selection saved to Images/Screenshots"'
+       # Partial -> file (SUPER + SHIFT + CAPS + S)
+       bind = SUPER SHIFT CTRL, S, exec, bash -lc 'set -euo pipefail; mkdir -p ~/Images/Screenshots; region="$(slurp)"; grim -g "$region" ~/Images/Screenshots/area-$(date +'%F_%H-%M-%S').png; notify-send "Screenshot" "Selection saved to Images/Screenshots"'
        ```
 
 65. Configure ghostty:
