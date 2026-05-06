@@ -22,7 +22,6 @@ screenshots (bound to a different keybinding, some save to clipboard, some to th
 
 fuzzy search across filesystem (fzf)
 
-
 APO Equalizer (for windows)
 
 Text editor (kwrite)
@@ -42,7 +41,6 @@ Discord
 Steam
 
 Syncthing
-
 
 μTorrent
 

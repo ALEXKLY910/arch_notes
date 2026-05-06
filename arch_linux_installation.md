@@ -683,7 +683,7 @@
 
 45. Install a _clipboard_. We'll install **CopyQ** - it features the clipboard history overlay window.
 
-> `sudo pacman -S copyq`
+    > `sudo pacman -S copyq`
 
     Add this to Hyprland's config under _AUTOSTART_:
 
@@ -935,7 +935,7 @@
 
 61. Configure Fuzzel to have a dark theme.
     1. Create `~/.config/fuzzel/themes/`.
-    2. Create `~/.config/fuzzel/themes/dark-modern.ini` and paste this inside:
+    2. Create `~/.config/fuzzel/themes/dracula.ini` and paste this inside:
 
     ```
     [colors]
@@ -975,9 +975,9 @@
        fuzzel_scheme="~/.config/fuzzel/themes/light.ini"
     fi
 
-    [[ -f "$fuzzel_scheme"]] || {echo "Missing fuzzel color scheme file: $fuzzel_scheme" >&2; exit 1; }
+    [[ -f "$fuzzel_scheme" ]] || {echo "Missing fuzzel color scheme file: $fuzzel_scheme" >&2; exit 1; }
 
-    ln -sf $fuzzel_scheme ~/.config/fuzzel/themes/current.ini
+    ln -sf $fuzzel_scheme $HOME/.config/fuzzel/themes/current.ini
     ```
 
 62. Configure Waybar.
@@ -1093,8 +1093,7 @@
 
     4. Create a symlink to one of them:
 
-    > `ln -sf ~/.config/ghostty/themes/default-light.conf ~/.config/ghostty/themes/current.conf`
-    5. Create a file at `~/.config/ghostty/config` and paste inside it:
+    > `ln -sf ~/.config/ghostty/themes/default-light.conf ~/.config/ghostty/themes/current.conf` 5. Create a file at `~/.config/ghostty/config` and paste inside it:
 
     ```
     config-file = themes/current.conf
