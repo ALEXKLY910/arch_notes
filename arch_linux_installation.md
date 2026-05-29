@@ -1025,8 +1025,10 @@ git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd 
 ./service.sh
 ```
 
+```
 3. Изменить конфигурацию. enp... - ethernet; wlp... - wi-fi.
    After that a file called conf.env is created.
+```
 
 ```bash
 ./service.sh run --config conf.env
