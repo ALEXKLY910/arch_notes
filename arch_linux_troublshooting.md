@@ -5,7 +5,6 @@ To find out how an app is called (the app's class) inside Hyprland, run `hyprctl
 
 The desktop-entry approach looks like this: copy the app’s .desktop file into ~/.local/share/applications/, then edit its Exec= line to prefix env QT_QPA_PLATFORMTHEME=qt5ct …. That exact trick is a standard way people force a Qt app to use a specific platform theme.
 
-
 `If in order to connect to Wi-Fi you need to be redirected to a login page in browser, first connect to Wi-Fi and then just go to this link and redirect should occur: `http://neverssl.com/`
 
 If something returns `sudo: unable to resolve host <hostname>`, edit `/etc/hosts/`: add this line `127.0.1.1 yourhostname.localdomain yourhostname`
@@ -152,3 +151,26 @@ And enable **greetd** on boot:
 To run SDDM in test mode:
 
 > `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/cherry-bloom/`
+
+---
+
+zapret legacy:
+
+1.  `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux` 2. `sudo bash main_script.sh`
+
+    Включить GameFilter -> n
+    Доступные статегии: ... -> ./general_alt.bat
+    Доступные сетевые интерфейсы: ... -> wlp3s0 3. Run the service: `sudo bash service.sh general_alt.bat` (from a random directory: `sudo bash ~/zapret-discord-youtube-linux/service.sh general_alt.bat`) 4. Check whether it's running: `sudo bash service.sh --status` 5. Stop the service: `sudo bash service.sh --stop` 6. If you want a keybind for that:
+
+    Create `~/.local/bin/toggle-zapret`, make it executable with `chmod +x`, paste inside the contents of `arch-notes/arch_linux_configs/toggle-zapret` inside and make it run without asking for password: run `sudo EDITOR=nano visudo -f /etc/sudoers.d/zapret` and paste this:
+
+    ```
+    alex ALL=(root) NOPASSWD: \
+    /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --status, \
+    /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --stop, \
+    /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh general_alt.bat
+    ```
+
+    Add this line to `~/.config/hypr/hyprland.conf`:
+    `bind = SUPER SHIFT, Z, exec, ~/.local/bin/toggle-zapret`
+    And update: `hyprctl reload`

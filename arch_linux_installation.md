@@ -1017,31 +1017,48 @@
        > `arch_linux_configs/waybar/style.css`
 
 63. Install **zapret**.
-    1. `git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux`
-    2. `sudo bash main_script.sh`
 
-       Включить GameFilter -> n
-       Доступные статегии: ... -> ./general_alt.bat
-       Доступные сетевые интерфейсы: ... -> wlp3s0
+```bash
+cd ~/Apps
+git clone https://github.com/Sergeydigl3/zapret-discord-youtube-linux.git && cd zapret-discord-youtube-linux
+./service.sh download-deps --default
+./service.sh
+```
 
-    3. Run the service: `sudo bash service.sh general_alt.bat` (from a random directory: `sudo bash ~/zapret-discord-youtube-linux/service.sh general_alt.bat`)
-    4. Check whether it's running: `sudo bash service.sh --status`
-    5. Stop the service: `sudo bash service.sh --stop`
+3. Изменить конфигурацию. enp... - ethernet; wlp... - wi-fi.
+   After that a file called conf.env is created.
 
-    6. If you want a keybind for that:
+```bash
+./service.sh run --config conf.env
+```
 
-       Create `~/.local/bin/toggle-zapret`, make it executable with `chmod +x`, paste inside the contents of `arch-notes/arch_linux_configs/toggle-zapret` inside and make it run without asking for password: run `sudo EDITOR=nano visudo -f /etc/sudoers.d/zapret` and paste this:
+Or create and alias:
 
-       ```
-       alex ALL=(root) NOPASSWD: \
-       /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --status, \
-       /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh --stop, \
-       /usr/bin/bash /home/alex/zapret-discord-youtube-linux/service.sh general_alt.bat
-       ```
+```bash
+nano ~/.bashrc
+```
 
-       Add this line to `~/.config/hypr/hyprland.conf`:
-       `bind = SUPER SHIFT, Z, exec, ~/.local/bin/toggle-zapret`
-       And update: `hyprctl reload`
+Put inside:
+
+```
+alias zapret="/home/alex/Apps/zapret-discord-youtube-linux/service.sh run --config /home/alex/Apps/zapret-discord-youtube-linux/conf.env"
+```
+
+```bash
+source ~/.bashrc
+```
+
+And make it work without the password:
+
+```bash
+sudo EDITOR=nano visudo -f /etc/sudoers.d/zapret
+```
+
+Paste
+
+```
+ alex ALL=(root) NOPASSWD: /usr/bin/bash /home/alex/Apps/zapret-discord-youtube-linux/service.sh run --config /home/alex/Apps/zapret-discord-youtube-linux/conf.env
+```
 
 64. Configure screenshots:
     1. Install the tools for screenshotting:
