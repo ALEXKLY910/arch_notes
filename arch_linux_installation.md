@@ -1050,18 +1050,6 @@ alias zapret="/home/alex/Apps/zapret-discord-youtube-linux/service.sh run --conf
 source ~/.bashrc
 ```
 
-And make it work without the password:
-
-```bash
-sudo EDITOR=nano visudo -f /etc/sudoers.d/zapret
-```
-
-Paste
-
-```
- alex ALL=(root) NOPASSWD: /usr/bin/bash /home/alex/Apps/zapret-discord-youtube-linux/service.sh run --config /home/alex/Apps/zapret-discord-youtube-linux/conf.env
-```
-
 64. Configure screenshots:
     1. Install the tools for screenshotting:
 

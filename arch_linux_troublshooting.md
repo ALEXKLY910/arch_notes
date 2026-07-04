@@ -1,3 +1,9 @@
+to update the packages, run
+
+```bash
+yay -Syu
+```
+
 If VS Code doesn't use the font, try enforcing it in the config:
 "editor.fontFamily": "JetBrainsMono Nerd Font, Symbols Nerd Font Mono, Symbols Nerd Font, Noto Color Emoji, monospace"
 
