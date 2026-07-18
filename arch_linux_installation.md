@@ -1263,3 +1263,17 @@ Turn on versioning (staggered).
 You can modify .stignore to include stuff you don't want to sync.
 
 If you hit a limit of files uploaded at once, modify `/etc/sysctl.d/99-inotify.conf` by adding `fs.inotify.max_user_watches=524288`. And running `sud sysctl --system`.
+
+79. Create a shortcut for the "day mode" (default display temperature, full display brightness, light system mode) and "night mode" (warm display, 15% brightness, dark system mode).
+    For that we'll need to modify our theme toggle script. Now it can accept parameters. "light" for light theme, "dark" for dark theme. The new script: `arch_linux_configs/theme-switcher.sh`
+
+Change the hyprland keybinding to use it instead.
+Create two scripts: day-mode.sh and night-mode.sh.
+Bind them.
+
+80. Add the ~/.local/bin directory to PATH:
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
