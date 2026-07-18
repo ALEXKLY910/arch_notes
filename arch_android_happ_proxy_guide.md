@@ -241,7 +241,6 @@ Other examples:
 ```bash
 happ-proxy git clone https://github.com/example/project.git
 happ-proxy npm ping
-happ-proxy npx live-server --host=0.0.0.0 --port=5500
 ```
 
 ## Why several proxy variables are needed
