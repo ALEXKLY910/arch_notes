@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+PHONE_IP="$(ip route show default | awk '/default/ {print $3; exit}')"
+PORT="10808"
+
+if pgrep -x chrome >/dev/null; then
+  notify-send "Chrome already running" "Close all Chrome windows before launching Chrome via Happ."
+  echo "Chrome is already running. Close it first, then run chrome-happ again."
+  exit 1
+fi
+
+exec google-chrome-stable \
+  --proxy-server="socks5://${PHONE_IP}:${PORT}"

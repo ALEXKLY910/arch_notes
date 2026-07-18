@@ -120,23 +120,7 @@ mkdir -p ~/.local/bin
 nano ~/.local/bin/chrome-happ
 ```
 
-Final script:
-
-```bash
-#!/usr/bin/env bash
-
-PHONE_IP="$(ip route show default | awk '/default/ {print $3; exit}')"
-PORT="10808"
-
-if pgrep -x chrome >/dev/null; then
-  notify-send "Chrome already running" "Close all Chrome windows before launching Chrome via Happ."
-  echo "Chrome is already running. Close it first, then run chrome-happ again."
-  exit 1
-fi
-
-exec google-chrome-stable \
-  --proxy-server="socks5://${PHONE_IP}:${PORT}"
-```
+Final script can be found at `arch_linux_configs/chrome-happ`
 
 Then we made it executable:
 
@@ -218,3 +202,76 @@ Chrome via Happ
 ```bash
 chrome-happ
 ```
+
+# Running terminal commands through the Happ proxy
+
+The Happ SOCKS5 proxy can also be used by terminal programs on Arch.
+
+The phone’s hotspot gateway address can be detected automatically with:
+
+Create a reusable proxy wrapper
+
+Create the script:
+
+```bash
+mkdir -p ~/.local/bin
+nano ~/.local/bin/happ-proxy
+```
+
+Final script can be found at `arch_linux_configs/happ-proxy`
+
+Save the file and make it executable:
+
+```bash
+chmod +x ~/.local/bin/happ-proxy
+```
+
+## Run commands through Happ
+
+Place happ-proxy before the command:
+
+```bash
+happ-proxy curl https://api.ipify.org
+```
+
+The returned address should be the Happ exit IP rather than the direct mobile connection.
+
+Other examples:
+
+```bash
+happ-proxy git clone https://github.com/example/project.git
+happ-proxy npm ping
+happ-proxy npx live-server --host=0.0.0.0 --port=5500
+```
+
+## Why several proxy variables are needed
+
+Different terminal programs inspect different environment variables.
+
+ALL_PROXY is commonly supported by programs such as curl.
+
+HTTP_PROXY and HTTPS_PROXY are needed by programs such as npm and npx.
+
+Both uppercase and lowercase variants are set because applications are inconsistent about which form they recognize.
+
+The proxy address uses socks5h rather than socks5:
+
+socks5h://PHONE_IP:10808
+
+The h means hostname and DNS resolution are handled through the proxy. This reduces the chance of DNS requests bypassing Happ.
+
+Local connections are excluded
+
+The wrapper sets:
+
+NO_PROXY=localhost,127.0.0.1,::1
+
+This prevents local services such as live-server from trying to access themselves through the phone proxy.
+
+## Limitations
+
+The wrapper only works with applications that support proxy environment variables. It does not transparently redirect every network connection made by the system.
+
+Programs such as ping do not work through a SOCKS5 proxy because they use ICMP rather than HTTP or SOCKS-compatible TCP connections.
+
+Some applications may require their own proxy configuration even when the environment variables are set.

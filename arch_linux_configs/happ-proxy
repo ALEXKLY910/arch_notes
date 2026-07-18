@@ -1,0 +1,22 @@
+
+#!/usr/bin/env bash
+
+PHONE_IP="$(ip route show default | awk '/default/ {print $3; exit}')"
+PROXY="socks5h://${PHONE_IP}:10808"
+
+if [[-z "$PHONE_IP"]]; then
+echo "Could not determine the default gateway."
+exit 1
+fi
+
+exec env \
+ ALL_PROXY="$PROXY" \
+    all_proxy="$PROXY" \
+ HTTP_PROXY="$PROXY" \
+    http_proxy="$PROXY" \
+ HTTPS_PROXY="$PROXY" \
+    https_proxy="$PROXY" \
+ NO_PROXY="localhost,127.0.0.1,::1" \
+ no_proxy="localhost,127.0.0.1,::1" \
+ "$@"
+
